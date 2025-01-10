@@ -1,7 +1,7 @@
 from units import defaultUnits, emptyUnits, Abbr, \
-Artillery, AAA, StrategicBomber, AirTransport, Tank, Transport, Fighter, BattleshipBombard, Submarine
+Artillery, AAA, StrategicBomber, AirTransport, Tank, Transport, Fighter, BattleshipBombard, Submarine, SurpriseStrikeSubmarine
 from utils import isEmptyUnit, getCount, Dice, BattleBoard, getValidUnits, HitRecord
-from types import PlayerState, Tech, Role, Flag, Tag, Stalemate
+from lib import PlayerState, Tech, Role, Flag, Tag, Stalemate
 from config import HASAAA, PLANES, ONESHOT
 
 class Player:
@@ -52,6 +52,7 @@ class Player:
             self.unitDict[Abbr.BBOMB] = BattleshipBombard(self.role, tech=True)
         elif tech == Tech.SUP_SUB:
             self.unitDict[Abbr.SUB] = Submarine(self.role, tech=True)
+            self.unitDict[Abbr.SSSUB] = SurpriseStrikeSubmarine(self.role, tech=True)
     def getHasDestroyer(self):
         return True if self.count(Abbr.DTR) > 0 else False
     #Needs Testing

@@ -1,5 +1,5 @@
 from player import Attacker, Defender
-from types import Flag, PlayerState, Stalemate
+from lib import Flag, PlayerState, Stalemate
 from config import PLANES
 from utils import Dice
 from units import Abbr
@@ -27,7 +27,7 @@ class Battle:
     #     targetedHits = self.attacker.rollTargetStrikes()
     #     self.defender.takeCasualties(targetedHits)
 
-    # def handleSubStrike(self):
+    # def handleSurpriseStrike(self):
     #     pass
     
     def run(self):
@@ -37,6 +37,9 @@ class Battle:
         self.attacker.landParatroopers()
         #Check Alive
         while self.defender == PlayerState.ALIVE and self.attacker == PlayerState.ALIVE:
+            #Submarine Warfare
+            self.handleSurpriseStrike()
+            #Main Combat
             attackerHits = Dice.roll(self.attacker.getDice())
             defenderHits = Dice.roll(self.defender.getDice())
             self.defender.takeCasualties(attackerHits)

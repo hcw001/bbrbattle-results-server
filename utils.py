@@ -1,7 +1,7 @@
 import math
 import random
 from units import Abbr
-from types import Tag
+from lib import Tag
 from config import PLANES, LANDUNITS, SHIPUNITS, SUBUNITS
 
 class Dice():

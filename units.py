@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from types import Tag, Role
+from lib import Tag, Role
 from enum import Enum
 
 def getRoll(side, values):
@@ -172,6 +172,14 @@ class Submarine(Unit):
         super().__init__(roll=roll, ipc=6)
     def getTags(self, **kwargs):
         return [Tag.SHIPUNITS, Tag.SUB]
+    
+class SurpriseStrikeSubmarine(Unit):
+    def __init__(self, side, tech=False):
+        if tech: roll = getRoll(side, (3,1))
+        else: roll = getRoll(side, (2,1))
+        super().__init__(roll=roll, ipc=6)
+    def getTags(self, **kwargs):
+        return [Tag.SHIPUNITS, Tag.SUB]
 
 class Destroyer(Unit):
     def __init__(self, side):
@@ -295,6 +303,7 @@ class Abbr(Enum):
     CSR = Cruiser.__name__
     BTS = Battleship.__name__
     SUB = Submarine.__name__
+    SSSUB = SurpriseStrikeSubmarine.__name__
     DTR = Destroyer.__name__
     ACC = AircraftCarrier.__name__
     TPT = Transport.__name__
@@ -328,6 +337,7 @@ def defaultUnits(role):
         #Ships
         Abbr.TPT: Transport(role),
         Abbr.SUB: Submarine(role),
+        Abbr.SSSUB: SurpriseStrikeSubmarine(role),
         Abbr.DTR: Destroyer(role),
         Abbr.CSR: Cruiser(role),
         #Capital Ships
