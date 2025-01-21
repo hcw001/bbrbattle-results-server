@@ -77,3 +77,4 @@ class Battle:
     #Sub warfare -- handle no fire subs
     #Take Land Flag -- UI
     #Hash for dictionary to count outcomes?
+    #Store attack history in database
