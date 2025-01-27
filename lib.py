@@ -24,15 +24,16 @@ class Flag(Enum):
     HASTRIPLEA = 2
 
 class Tech(Enum):
-    ADV_ART = 1
-    ATC = 2
-    HEAVY_BOMB = 3
-    HEAVY_TANK = 4
-    IMP_TPT = 5
-    JET_FTR = 6
-    SUP_BTS = 7
-    SUP_ACC = 8
-    SUP_SUB = 9
+    ADV_ART = 0
+    ATC = 1
+    HEAVY_BOMB = 2
+    HEAVY_TANK = 3
+    JET_FTR = 4
+    SUP_BTS = 5
+    SUP_SUB = 6
+    SUP_ACC = 7
+    IMP_TPT = 8
+    NONE = 9
     
 class Stalemate(Enum):
     PLANE = 1

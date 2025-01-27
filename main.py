@@ -71,6 +71,9 @@ def getResults():
         defenderOrderOfLoss = data.get('defenderOrderOfLoss')
         attackerUnits = data.get('attackerUnits')
         defenderUnits = data.get('defenderUnits')
+        targetSelectAssigments = data.get('targetSelectAssignments')
+        attackerSubAssignments = data.get('attackerSubAssignments')
+        defenderSubAssignments = data.get('defenderSubAssignments')
 
         results = Battle(
             terrain=terrain,
