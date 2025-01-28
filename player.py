@@ -61,6 +61,8 @@ class Player:
     def getDice(self):
         board = self.getBattleBoard()
         for unit in self.units:
+            #Skip Surprise Strike Subs
+            if unit == Abbr.SSSUB: continue
             if isEmptyUnit(self.units[unit]): continue
             board.add(self.get(unit), self.count(unit))
         return board.getDice(), board.getTags()

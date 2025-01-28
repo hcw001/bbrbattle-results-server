@@ -47,17 +47,21 @@ class Battle:
 
     def numberSubmarineStrikes(self, player, opponent):
         if (self.terrain == 'land'): return 0
+        if opponent.count(*SHIPUNITS, *SUBUNITS) == 0: return 0
         if (player.tech == Tech.SUP_SUB): 
-            pass
+            if opponent.count(Abbr.DTR) > 0: 
+                return max(
+                    player.count(Abbr.SUB) - opponent.count(Abbr.DTR) * 3, 0
+                )
         else:
             if opponent.count(Abbr.DTR) > 0: return 0
-            if opponent.count(*SHIPUNITS, *SUBUNITS) == 0: return 0
+        return player.count(Abbr.SUB)
             
-            assert player.count(Abbr.SSSUB) == 0
-            usedCount = player.count(Abbr.SUB)
-            player.units[Abbr.SUB] -= usedCount
-            player.units[Abbr.SSSUB] += usedCount
-            return player.count(Abbr.SSSUB)
+            # assert player.count(Abbr.SSSUB) == 0
+            # usedCount = player.count(Abbr.SUB)
+            # player.units[Abbr.SUB] -= usedCount
+            # player.units[Abbr.SSSUB] += usedCount
+            # return player.count(Abbr.SSSUB)
 
     def handleSurpriseStrike(self):
         #validate submarine warfare
@@ -88,7 +92,7 @@ class Battle:
             #Main Combat
             attackerHits = Dice.roll(self.attacker.getDice())
             defenderHits = Dice.roll(self.defender.getDice())
-            self.revertSurpriseStrikeSubs() #Don't Handle Taking SSSUBs
+            self.revertSurpriseStrikeSubs() #Don't Handle Taking SSSUBs in Casualty Logic
             self.defender.takeCasualties(attackerHits)
             self.attacker.takeCasualties(defenderHits)
             #Check Retreat - Adjust Player States
