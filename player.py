@@ -110,6 +110,38 @@ class Player:
         elif len(units) == 1 and not isEmptyUnit(self.units[Abbr.SUB]): return Stalemate.SUB
         elif len(units) == 1 and self.count(Abbr.TPT) == 1: return Stalemate.LONETPT
         else: return Stalemate.NONE
+    def rollTargetStrikes(self, assignments):
+        #assignments: <[unit: string]: number[]>
+        usedCount = 0
+        hits = []
+        for unit in assignments:
+            for target in assignments[unit]:
+                #Tags take individual unit names
+                usedCount += target
+                strikes = Dice.roll([3]*target, [unit] * target)
+                if len(strikes) > 0:
+                    #Handle Capital Ships
+                    if hasattr(self.get(unit), 'downgrade'):
+                        hits.append(strikes[0])
+                        if len(strikes) > 1:
+                            unitName = self.get(unit).downgrade
+                            for _ in len(strikes-1):
+                                #Take Downgraded Unit
+                                hits.append([unitName])
+                                if hasattr(self.get(unitName), 'downgrade'):
+                                    unitName = self.get(unitName).downgrade
+                                else:
+                                    break
+                    else:
+                        #Regular Units
+                        hits.append(strikes[0])
+        return hits, usedCount
+    
+    def rollSurpriseStrikes(self, opponent, subCount, assignments):
+        usedCount = 0
+        hits = []
+        #Sort assignment keys
+        for unit in assignments:
     
 class Attacker(Player):
     def __init__(self, **kwargs):
@@ -154,33 +186,6 @@ class Attacker(Player):
             self.units[Abbr.TSTAC] = hold
             return dice, tags
         else: return super().getDice()
-    def rollTargetStrikes(self, assignments):
-        #assignments: <[unit: string]: number[]>
-        usedCount = 0
-        hits = []
-        for unit in assignments:
-            for target in assignments[unit]:
-                #Tags take individual unit names
-                usedCount += target
-                strikes = Dice.roll([3]*target, [unit] * target)
-                if len(strikes) > 0:
-                    #Handle Capital Ships
-                    if hasattr(self.get(unit), 'downgrade'):
-                        hits.append(strikes[0])
-                        if len(strikes) > 1:
-                            unitName = self.get(unit).downgrade
-                            for _ in len(strikes-1):
-                                #Take Downgraded Unit
-                                hits.append([unitName])
-                                if hasattr(self.get(unitName), 'downgrade'):
-                                    unitName = self.get(unitName).downgrade
-                                else:
-                                    break
-                    else:
-                        #Regular Units
-                        hits.append(strikes[0])
-        
-        return hits, usedCount
 
 class Defender(Player):
     def __init__(self, **kwargs):

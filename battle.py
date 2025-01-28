@@ -57,18 +57,40 @@ class Battle:
             if opponent.count(Abbr.DTR) > 0: return 0
         return player.count(Abbr.SUB)
             
-            # assert player.count(Abbr.SSSUB) == 0
-            # usedCount = player.count(Abbr.SUB)
-            # player.units[Abbr.SUB] -= usedCount
-            # player.units[Abbr.SSSUB] += usedCount
-            # return player.count(Abbr.SSSUB)
 
     def handleSurpriseStrike(self):
-        #validate submarine warfare
+        #handle attacker
+        aSubs = self.numberSubmarineStrikes(self.attacker, self.defender)
+        aSubHits = None
+        if aSubs > 0:
+            attackerAssignments = self.params.get('attackerSubAssignments')
+            aSubHits, aSubsUsed = self.attacker.rollSurpriseStrikes(self.defender, aSubs, attackerAssignments)
+            assert aSubs == aSubsUsed
+
+        #handle defender
+        dSubs = self.numberSubmarineStrikes(self.defender, self.attacker)
+        dSubsHits = None
+        if dSubs > 0:
+            defenderAssignments = self.params.get('defenderSubAssignments')
+            dSubHits, dSubsUsed = self.defender.rollSurpriseStrikes(self.attacker, dSubs, defenderAssignments)
+            assert dSubs == dSubsUsed
+
+        #apply attacker's hits
+        if aSubHits is not None: self.defender.takeCasualties(aSubHits)
+        #apply defender's hits
+        if dSubHits is not None: self.attacker.takeCasualties(dSubHits)
+
+        #swap attacker subs
+        assert self.attacker.count(Abbr.SSSUB) == 0
+        assert self.attacker.count(Abbr.SUB) >= aSubs
+        self.attacker.units[Abbr.SUB] -= aSubs
+        self.attacker.units[Abbr.SSSUB] += aSubs
         
-        #handle taking subs & sssubs
-        #sssubs do not roll on getDice -> filter
-        pass
+        #swap defender subs
+        assert self.defender.count(Abbr.SSSUB) == 0
+        assert self.defender.count(Abbr.SUB) >= dSubs
+        self.defender.units[Abbr.SUB] -= dSubs
+        self.defender.units[Abbr.SSSUB] += dSubs
         
     def revertSurpriseStrikeSubs(self):
         #Attacker
