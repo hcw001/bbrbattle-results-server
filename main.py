@@ -74,6 +74,7 @@ def getResults():
         targetSelectAssigments = data.get('targetSelectAssignments')
         attackerSubAssignments = data.get('attackerSubAssignments')
         defenderSubAssignments = data.get('defenderSubAssignments')
+        paradrops = data.get('paradrops')
 
         results = Battle(
             terrain=terrain,
@@ -82,7 +83,11 @@ def getResults():
             attackerOrderOfLoss=attackerOrderOfLoss,
             defenderOrderOfLoss=defenderOrderOfLoss,
             attackerUnits=attackerUnits,
-            defenderUnits=defenderUnits
+            defenderUnits=defenderUnits,
+            targetSelectAssigments=targetSelectAssigments,
+            attackerSubAssignments=attackerSubAssignments,
+            defenderSubAssignments=defenderSubAssignments,
+            paradrops=paradrops
         ).run().dump()
         response = jsonify(results)
 

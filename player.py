@@ -12,6 +12,7 @@ class Player:
         self.retreatedUnits = emptyUnits(self.unitDict)
         self.state = PlayerState.ALIVE
         self.casualties = []
+        self.tech = Tech.NONE
     def check(self):
         if self.tech == Tech.SUP_BTS:
             assert self.count(Abbr.BTS, Abbr.BTSx) == 0
@@ -34,6 +35,7 @@ class Player:
         for unit in units:
             self.units[unit] = self.unitDict[unit].addUnit(self.units[unit], units[unit])
     def applyTech(self, tech):
+        self.tech = tech
         #No changes on Tech.SUP_ACC
         if tech == Tech.ADV_ART:
             self.unitDict[Abbr.ART] = Artillery(self.role, tech=True)
@@ -69,7 +71,8 @@ class Player:
                 self.units[unit] = self.get(unit).applyHit(self.count(unit))
                 if hasattr(self.get(unit), 'downgrade'):
                     #Add Damaged Unit
-                    self.units[unit] = self.get(unit).addUnit(self.count(unit), 1)
+                    damagedUnit = self.get(unit).downgrade
+                    self.units[damagedUnit] = self.get(damagedUnit).addUnit(self.count(damagedUnit), 1)
                 return unit
         return None
     def takeCasualties(self, hits): #hits: Tag[] - a list of tags: tags[]
@@ -149,27 +152,33 @@ class Attacker(Player):
             self.units[Abbr.TSTAC] = hold
             return dice, tags
         else: return super().getDice()
-    #Incomplete
-    def rollTargetStrikes(self, queue):
-        #queue: (target: <unit: string>, count: number)[]
-        used = 0
+    def rollTargetStrikes(self, assignments):
+        #assignments: <[unit: string]: number[]>
+        usedCount = 0
         hits = []
-        for target, count in queue:
-            used += count
-            #Tags take individual unit names
-            hits = Dice.roll([3]*count, [target]*count)
-            #Target Strike Success
-            if len(hits) > 0:
-                #Remove units
-                if len(hits) > 1:
-                     #Handle capital ships
-                     pass
-                pass
+        for unit in assignments:
+            for target in assignments[unit]:
+                #Tags take individual unit names
+                usedCount += target
+                strikes = Dice.roll([3]*target, [unit] * target)
+                if len(strikes) > 0:
+                    #Handle Capital Ships
+                    if hasattr(self.get(unit), 'downgrade'):
+                        hits.append(strikes[0])
+                        if len(strikes) > 1:
+                            unitName = self.get(unit).downgrade
+                            for _ in len(strikes-1):
+                                #Take Downgraded Unit
+                                hits.append([unitName])
+                                if hasattr(self.get(unitName), 'downgrade'):
+                                    unitName = self.get(unitName).downgrade
+                                else:
+                                    break
+                    else:
+                        #Regular Units
+                        hits.append(strikes[0])
         
-        #Switch to TS-Tacs
-        assert used <= self.count(Abbr.TAC)
-        self.units[Abbr.TAC] -= used
-        self.units[Abbr.TSTAC] += used
+        return hits, usedCount
 
 class Defender(Player):
     def __init__(self, **kwargs):
