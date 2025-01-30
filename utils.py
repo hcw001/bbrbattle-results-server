@@ -91,5 +91,11 @@ def numberOfSubsInAssignments(assignments):
         count += sum(assignments[unit])
     return count
 
+def validateAssignments(opponent, assignments, subCount):
+    assert allAssignmentsPresent(opponent, assignments)
+    assert numberOfSubsInAssignments == subCount
+    return True
+
+
 
     

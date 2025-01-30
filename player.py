@@ -1,6 +1,6 @@
 from units import defaultUnits, emptyUnits, Abbr, \
 Artillery, AAA, StrategicBomber, AirTransport, Tank, Transport, Fighter, BattleshipBombard, Submarine, SurpriseStrikeSubmarine
-from utils import isEmptyUnit, getCount, Dice, BattleBoard, getValidUnits, HitRecord, allAssignmentsPresent, numberOfSubsInAssignments
+from utils import isEmptyUnit, getCount, Dice, BattleBoard, getValidUnits, HitRecord, validateAssignments
 from lib import PlayerState, Tech, Role, Flag, Tag, Stalemate
 from config import HASAAA, PLANES, ONESHOT, ATTACK_STATIC_SUB_TARGET_ORDER, DEFENSE_STATIC_SUB_TARGET_ORDER
 
@@ -11,8 +11,9 @@ class Player:
         self.units = emptyUnits(self.unitDict)
         self.retreatedUnits = emptyUnits(self.unitDict)
         self.state = PlayerState.ALIVE
-        self.casualties = []
+        self.casualties = [] #HitRecord[]
         self.tech = Tech.NONE
+        self.isFirstRound = True  #trackTargetStrikes
     def check(self):
         if self.tech == Tech.SUP_BTS:
             assert self.count(Abbr.BTS, Abbr.BTSx) == 0
@@ -55,6 +56,8 @@ class Player:
         elif tech == Tech.SUP_SUB:
             self.unitDict[Abbr.SUB] = Submarine(self.role, tech=True)
             self.unitDict[Abbr.SSSUB] = SurpriseStrikeSubmarine(self.role, tech=True)
+    def updateCasualtyRecord(self, record):
+        self.casualties.append(record)
     def getHasDestroyer(self):
         return True if self.count(Abbr.DTR) > 0 else False
     #Needs Testing
@@ -98,7 +101,9 @@ class Player:
                         else: #No Alternative found
                             pass
         #All Hits Allocated - if Possible
+        self.updateCasualtyRecord(record)
         del record
+
     def getUnitSet(self):
         return [unit for unit in self.units if not isEmptyUnit(self.units[unit])]
     def checkRetreat(self):
@@ -110,6 +115,8 @@ class Player:
         elif len(units) == 1 and not isEmptyUnit(self.units[Abbr.SUB]): return Stalemate.SUB
         elif len(units) == 1 and self.count(Abbr.TPT) == 1: return Stalemate.LONETPT
         else: return Stalemate.NONE
+    def nextRound(self):
+        self.isFirstRound = False
     def rollTargetStrikes(self, assignments):
         #assignments: <[unit: string]: number[]>
         usedCount = 0
@@ -138,27 +145,32 @@ class Player:
         return hits, usedCount
     
     def rollSurpriseStrikes(self, opponent, subCount, assignments):
-        #Reallocate Submarine Assignments
-        assignmentsPresent = allAssignmentsPresent(opponent, assignments)
-        assignedSubs = numberOfSubsInAssignments(assignments)
-        #self.subTargetOrder
-        
         #Base Condition - Completely Allocated
-        if (assignmentsPresent and assignedSubs == subCount):
+        if self.isFirstRound:
+            assert validateAssignments(opponent, assignments, subCount)
             return self.rollTargetStrikes(assignments)
-        #Case 1: allAssignments + more subs
-        elif (assignmentsPresent and assignedSubs > subCount):
-            pass
-        #Case 2: allAssignments + less subs
-        elif (assignmentsPresent and assignedSubs < subCount):
-            pass
-        #Case 3: !allAssignments
-        else:
-            pass 
-        for unit in assignments:
-            pass
-        #Roll Target Strike Method
-        self.rollTargetStrikes(assignments)
+        
+        #Reassign Sub Strikes
+        assignments = {}
+        for unit in self.subTargetOrder:
+            unitCount = opponent.count(unit)
+            if unitCount > 0:
+                assignments[unit] = [0]*unitCount
+                for targetIdx in range(len(assignments[unit])):
+                    if subCount > 0:
+                        assignments[unit][targetIdx] += 1
+                        subCount -= 1
+                    else:
+                        break
+        while subCount > 0:
+            for unit in assignments:
+                for targetIdx in assignments[unit]:
+                    if subCount > 0:
+                        assignments[unit][targetIdx] += 1
+                        subCount -= 1
+                    else:
+                        break
+        return self.rollTargetStrikes(assignments)
     
 class Attacker(Player):
     def __init__(self, **kwargs):
@@ -168,7 +180,6 @@ class Attacker(Player):
         self.orderOfLoss = kwargs['orderOfLoss']
         self.subTargetOrder = ATTACK_STATIC_SUB_TARGET_ORDER
         self.check()
-        self.isFirstRound = True  #trackTargetStrikes
     def landParatroopers(self):
         for units in self.units[Abbr.ATPT]:
             for unit in units:
@@ -196,7 +207,6 @@ class Attacker(Player):
         return super().checkRetreat()
     def getDice(self):
         if self.isFirstRound:
-            self.isFirstRound = False #Toggle
             #Remove Target Strike Tacticals
             hold = self.count(Abbr.TSTAC)
             self.units[Abbr.TSTAC] = 0

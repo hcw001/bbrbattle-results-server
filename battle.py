@@ -100,6 +100,10 @@ class Battle:
         dSubs = self.defender.count(Abbr.SSSUB)
         self.defender.units[Abbr.SSSUB] -= dSubs
         self.defender.units[Abbr.SUB] += dSubs
+
+    def nextRound(self):
+        self.attacker.nextRound()
+        self.defender.nextRound()
     
     def run(self):
         flag = self.handleAAA()
@@ -119,6 +123,7 @@ class Battle:
             #Check Retreat - Adjust Player States
             conditions = set(self.attacker.checkRetreat(), self.defender.checkRetreat())
             if self.checkEarlyTermination(conditions): break
+            self.nextRound()
         return self
     
     def dump(self):
