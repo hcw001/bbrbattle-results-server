@@ -77,4 +77,19 @@ class HitRecord:
         self.record.append((choice, targets))
     def remove(self, index):
         self.record.pop(index)
+
+#Surprise Strike Utilities
+def allAssignmentsPresent(opponent, assignments):
+    for unit in assignments:
+        targets = len(filter(lambda target: target > 0, assignments[unit]))
+        if not (targets <= opponent.count(unit)): return False
+    return True 
+
+def numberOfSubsInAssignments(assignments):
+    count = 0
+    for unit in assignments:
+        count += sum(assignments[unit])
+    return count
+
+
     

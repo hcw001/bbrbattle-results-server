@@ -56,7 +56,6 @@ class Battle:
         else:
             if opponent.count(Abbr.DTR) > 0: return 0
         return player.count(Abbr.SUB)
-            
 
     def handleSurpriseStrike(self):
         #handle attacker

@@ -1,8 +1,8 @@
 from units import defaultUnits, emptyUnits, Abbr, \
 Artillery, AAA, StrategicBomber, AirTransport, Tank, Transport, Fighter, BattleshipBombard, Submarine, SurpriseStrikeSubmarine
-from utils import isEmptyUnit, getCount, Dice, BattleBoard, getValidUnits, HitRecord
+from utils import isEmptyUnit, getCount, Dice, BattleBoard, getValidUnits, HitRecord, allAssignmentsPresent, numberOfSubsInAssignments
 from lib import PlayerState, Tech, Role, Flag, Tag, Stalemate
-from config import HASAAA, PLANES, ONESHOT
+from config import HASAAA, PLANES, ONESHOT, ATTACK_STATIC_SUB_TARGET_ORDER, DEFENSE_STATIC_SUB_TARGET_ORDER
 
 class Player:
     def __init__(self, role):
@@ -138,10 +138,27 @@ class Player:
         return hits, usedCount
     
     def rollSurpriseStrikes(self, opponent, subCount, assignments):
-        usedCount = 0
-        hits = []
-        #Sort assignment keys
+        #Reallocate Submarine Assignments
+        assignmentsPresent = allAssignmentsPresent(opponent, assignments)
+        assignedSubs = numberOfSubsInAssignments(assignments)
+        #self.subTargetOrder
+        
+        #Base Condition - Completely Allocated
+        if (assignmentsPresent and assignedSubs == subCount):
+            return self.rollTargetStrikes(assignments)
+        #Case 1: allAssignments + more subs
+        elif (assignmentsPresent and assignedSubs > subCount):
+            pass
+        #Case 2: allAssignments + less subs
+        elif (assignmentsPresent and assignedSubs < subCount):
+            pass
+        #Case 3: !allAssignments
+        else:
+            pass 
         for unit in assignments:
+            pass
+        #Roll Target Strike Method
+        self.rollTargetStrikes(assignments)
     
 class Attacker(Player):
     def __init__(self, **kwargs):
@@ -149,6 +166,7 @@ class Attacker(Player):
         self.applyTech() #kwargs['tech']
         self.addUnits()  #kwargs['units']
         self.orderOfLoss = kwargs['orderOfLoss']
+        self.subTargetOrder = ATTACK_STATIC_SUB_TARGET_ORDER
         self.check()
         self.isFirstRound = True  #trackTargetStrikes
     def landParatroopers(self):
@@ -193,6 +211,7 @@ class Defender(Player):
         self.applyTech() #kwargs['tech']
         self.addUnits()  #kwargs['units']
         self.orderOfLoss = kwargs['orderOfLoss']
+        self.subTargetOrder = DEFENSE_STATIC_SUB_TARGET_ORDER
         self.check()
     def rollTripleA(self, numberOfPlanes):
         dice = []
