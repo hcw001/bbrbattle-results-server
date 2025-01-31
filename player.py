@@ -60,6 +60,22 @@ class Player:
         self.casualties.append(record)
     def getHasDestroyer(self):
         return True if self.count(Abbr.DTR) > 0 else False
+    def getIpcValueUnits(self, units):
+        ipcValue = 0
+        for unit in self.units:
+            if not isEmptyUnit(self.units[unit]):
+                #Handle Air Transports
+                if unit == Abbr.ATPT:
+                    for pair in self.units[Abbr.ATPT]:
+                        #Air Transport
+                        ipcValue += self.get(Abbr.ATPT).ipc
+                        for item in pair:
+                            #Cargo
+                            ipcValue += self.get(item).ipc
+                #Handle Other Units
+                else:
+                    ipcValue += self.count(unit) * self.get(unit).ipc
+        return ipcValue
     #Needs Testing
     def getDice(self):
         board = self.getBattleBoard()
@@ -175,17 +191,18 @@ class Player:
 class Attacker(Player):
     def __init__(self, **kwargs):
         super(Attacker, self).__init__(Role.Attack)
-        self.applyTech() #kwargs['tech']
-        self.addUnits()  #kwargs['units']
+        self.applyTech(kwargs['tech'])
+        self.addUnits(kwargs['units'])
         self.orderOfLoss = kwargs['orderOfLoss']
         self.subTargetOrder = ATTACK_STATIC_SUB_TARGET_ORDER
         self.check()
+        self.initIpc = self.getIpcValueUnits(self.units)
     def landParatroopers(self):
         for units in self.units[Abbr.ATPT]:
             for unit in units:
                 if unit is not None:
                     self.units[unit] += 1
-        self.retreatedUnits[Abbr.ATPT] = len(self.units[Abbr.ATPT])
+        self.retreatedUnits[Abbr.ATPT] = [] * len(self.units[Abbr.ATPT])
         self.units[Abbr.ATPT] = 0
     def getBattleBoard(self):
         return BattleBoard(boosts={
@@ -218,11 +235,12 @@ class Attacker(Player):
 class Defender(Player):
     def __init__(self, **kwargs):
         super(Defender, self).__init__(Role.Defense)
-        self.applyTech() #kwargs['tech']
-        self.addUnits()  #kwargs['units']
+        self.applyTech(kwargs['tech'])
+        self.addUnits(kwargs['units'])
         self.orderOfLoss = kwargs['orderOfLoss']
         self.subTargetOrder = DEFENSE_STATIC_SUB_TARGET_ORDER
         self.check()
+        self.initIpc = self.getIpcValueUnits(self.units)
     def rollTripleA(self, numberOfPlanes):
         dice = []
         for unit in HASAAA:

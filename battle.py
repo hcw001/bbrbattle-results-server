@@ -127,15 +127,30 @@ class Battle:
         return self
     
     def dump(self):
+        attackerCasualties = 0 #Create Casualty Dict
+        defenderCasualties = 0
+
+        attackerEndIpc = self.attacker.getIpcValueUnits(self.attacker.units) + self.attacker.getIpcValueUnits(self.attacker.retreatedUnits)
+        defenderEndIpc = self.defender.getIpcValueUnits(self.defender.units) + self.defender.getIpcValueUnits(self.defender.retreatedUnits)
+        
+        assert attackerEndIpc + self.attacker.getIpcValueUnits(attackerCasualties) == self.attacker.initIpc
+        assert defenderEndIpc + self.defender.getIpcValueUnits(defenderCasualties) == self.defender.initIpc
+        
         return {
             'attacker': {
-                'ipc': 0,
+                'ipc': {
+                    'start': self.attacker.initIpc,
+                    'end': attackerEndIpc
+                },
                 'alive': {},
                 'dead': {}
             },
             'defender': {
-                'ipc': 0,
-                'alive': {},
+                'ipc': {
+                    'start': self.defender.initIpc,
+                    'end': defenderEndIpc
+                },
+                'alive': {}, #Handle ATPT should be number
                 'dead': {}
             },
             'flag': self.attacker.state - self.defender.state
@@ -149,9 +164,7 @@ class Battle:
             else: return True
         return False
     
-    #Handle target strikes
     #Keep track of casualties -> track IPC
-    #Sub warfare -- handle no fire subs
     #Take Land Flag -- UI
     #Hash for dictionary to count outcomes?
     #Store attack history in database
