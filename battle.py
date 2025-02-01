@@ -1,8 +1,29 @@
 from player import Attacker, Defender
 from lib import Flag, PlayerState, Stalemate, Tech
 from config import PLANES, SHIPUNITS, SUBUNITS
-from utils import Dice
+from utils import Dice, formatUnits, parseCasualties, combineUnits
 from units import Abbr
+from encoder import dictHash
+
+class Simulation:
+    def __init__(self, **kwargs):
+        self.params = kwargs
+        self.results = {}
+    def run(self):
+        for _ in range(1000):
+            battle = Battle(self.params)
+            result = battle.run().dump()
+            self.addResult(result)
+            del battle
+    def addResult(self, result):
+        hashValue = dictHash(result)
+        if hashValue in self.results:
+            self.results[hashValue]['count'] += 1
+        else:
+            self.results[hashValue] = {
+                'outcome': result,
+                'count': 1
+            }
 
 class Battle:
     def __init__(self, **kwargs):
@@ -127,14 +148,18 @@ class Battle:
         return self
     
     def dump(self):
-        attackerCasualties = 0 #Create Casualty Dict
-        defenderCasualties = 0
+        attackerCasualties = formatUnits(parseCasualties(self.attacker.casualties)) #Create Casualty Dict
+        defenderCasualties = formatUnits(parseCasualties(self.defender.casualties))
 
         attackerEndIpc = self.attacker.getIpcValueUnits(self.attacker.units) + self.attacker.getIpcValueUnits(self.attacker.retreatedUnits)
         defenderEndIpc = self.defender.getIpcValueUnits(self.defender.units) + self.defender.getIpcValueUnits(self.defender.retreatedUnits)
         
         assert attackerEndIpc + self.attacker.getIpcValueUnits(attackerCasualties) == self.attacker.initIpc
         assert defenderEndIpc + self.defender.getIpcValueUnits(defenderCasualties) == self.defender.initIpc
+
+        #combineUnits standardizes ATPT -> number
+        attackerUnits = combineUnits(self.attacker.units, self.attacker.retreatedUnits)
+        defenderUnits = combineUnits(self.defender.units, self.defender.retreatedUnits)
         
         return {
             'attacker': {
@@ -142,16 +167,16 @@ class Battle:
                     'start': self.attacker.initIpc,
                     'end': attackerEndIpc
                 },
-                'alive': {},
-                'dead': {}
+                'alive': attackerUnits,
+                'dead': attackerCasualties
             },
             'defender': {
                 'ipc': {
                     'start': self.defender.initIpc,
                     'end': defenderEndIpc
                 },
-                'alive': {}, #Handle ATPT should be number
-                'dead': {}
+                'alive': defenderUnits,
+                'dead': defenderCasualties
             },
             'flag': self.attacker.state - self.defender.state
         }
@@ -163,8 +188,3 @@ class Battle:
             if any(TPT.tech for TPT in [self.attacker.get(Abbr.TPT), self.defender.get(Abbr.TPT)]): return False
             else: return True
         return False
-    
-    #Keep track of casualties -> track IPC
-    #Take Land Flag -- UI
-    #Hash for dictionary to count outcomes?
-    #Store attack history in database

@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from battle import Simulation
 #from AccessHistory import fetchState, insertState
 from battle import Battle
 
@@ -76,7 +77,7 @@ def getResults():
         defenderSubAssignments = data.get('defenderSubAssignments')
         paradrops = data.get('paradrops')
 
-        results = Battle(
+        results = Simulation(
             terrain=terrain,
             attackerTech=attackerTech,
             defenderTech=defenderTech,
@@ -101,3 +102,6 @@ def getResults():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
 
+    #Take Land Flag -- UI
+    #Store attacks in database (clickhouse, mongo?)
+    #Testing

@@ -97,5 +97,40 @@ def validateAssignments(opponent, assignments, subCount):
     return True
 
 
+#Dump Utils
+def parseCasualties(casualtyList):
+    """Parse casualty list to unit dictionary."""
+    units = {}
+    for battle in casualtyList:
+        for unit in battle:
+            if unit in units:
+                units[unit] += 1
+            else:
+                units[unit] = 1
+    return units
+
+def formatUnits(units):
+    """Standard API response format. ATPT -> number. Remove empty units."""
+    for unit in units:
+        if isEmptyUnit(units[unit]):
+            del units[unit]
+            continue
+        if unit == Abbr.ATPT:
+            units[unit] = getCount(units[unit])
+    return units
+        
+    pass
+
+def combineUnits(units, otherUnits):
+    """Combine seperate unit dicts"""
+    unitDict1 = formatUnits(units)
+    unitDict2 = formatUnits(otherUnits)
+    for unit in unitDict2:
+        if unit in unitDict1:
+            unitDict1[unit] += unitDict1[unit]
+        else:
+            unitDict1[unit] = unitDict2[unit]
+    return unitDict1
+
 
     
