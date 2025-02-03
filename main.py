@@ -6,7 +6,7 @@ from battle import Battle
 
 app = Flask(__name__)
 
-#allow_origin = "https://bbr40.com"
+#allow_origin = "https://www.bbr40.com"
 #https://www.bbr40.com
 #CORS(app, origins=allow_origin)
 CORS(app, origins='https://www.bbr40.com')
@@ -22,7 +22,7 @@ def add_cors_headers(response):
     return response
 
 
-@app.route('/api/calculate', methods=['POST, "OPTIONS'])
+@app.route('/api/calculate', methods=['POST', 'OPTIONS'])
 def getResults():
     try:
         # Parses JSON data from the request body
