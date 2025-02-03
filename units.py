@@ -130,8 +130,8 @@ class AirTransport(Unit):
         return []
     def getDice(self, buff=0):
         return []
-    def addUnit(self, previousUnits, newUnits):
-        units = previousUnits.append(newUnits)
+    def addUnit(self, units, newUnits):
+        units.extend(newUnits)
         return units
     def applyHit(self, units):
         units.pop(0)
@@ -286,6 +286,10 @@ class DamagedSuperAircraftCarrier(Unit):
         return [Tag.SHIPUNITS, Tag.AIRCRAFT, Tag.SUB]
 
 class Abbr(Enum):
+
+    def __get__(self, instance, owner):
+        return self.value
+
     TRIPLEA = AAA.__name__
     ART = Artillery.__name__
     CAV = Cavalry.__name__

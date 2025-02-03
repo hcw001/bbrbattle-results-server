@@ -1,17 +1,19 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from battle import Simulation
+from simulation import Simulation
 #from AccessHistory import fetchState, insertState
 from battle import Battle
 
+allow_origin = "https://www.bbr40.com/"
+
 app = Flask(__name__)
 
-CORS(app, origins='https://bbrbattle.com')
+CORS(app, origins=allow_origin)
 
 #Add CORS headers
 @app.after_request
 def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = 'https://bbrbattle.com'
+    response.headers['Access-Control-Allow-Origin'] = allow_origin
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
     return response
@@ -61,7 +63,7 @@ def putState():
 
 @app.route('/api/calculate', methods=['POST'])
 def getResults():
-    try:
+    #try:
         # Parses JSON data from the request body
         data = request.get_json() 
         # Stored as python dictionary
@@ -90,13 +92,17 @@ def getResults():
             defenderSubAssignments=defenderSubAssignments,
             paradrops=paradrops
         ).run().dump()
-        response = jsonify(results)
-
+        
+        response = {
+            'code': 1,
+            'message': 'OK',
+            'outputs': results
+        }
         # Return a JSON response
-        return response, 200
+        return jsonify(response), 200,
     
-    except Exception as e:
-        return {'error': str(e)}, 400
+    #except Exception as e:
+        #return {'code': 0, 'message': str(e), 'outputs': {}}, 200
 
     
 if __name__ == '__main__':
@@ -105,3 +111,9 @@ if __name__ == '__main__':
     #Take Land Flag -- UI
     #Store attacks in database (clickhouse, mongo?)
     #Testing
+
+    #Front End
+    """
+    //OOL Description
+    //Target Select Description + Subs
+    """

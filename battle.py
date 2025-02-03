@@ -3,31 +3,11 @@ from lib import Flag, PlayerState, Stalemate, Tech
 from config import PLANES, SHIPUNITS, SUBUNITS
 from utils import Dice, formatUnits, parseCasualties, combineUnits
 from units import Abbr
-from encoder import dictHash
-
-class Simulation:
-    def __init__(self, **kwargs):
-        self.params = kwargs
-        self.results = {}
-    def run(self):
-        for _ in range(1000):
-            battle = Battle(self.params)
-            result = battle.run().dump()
-            self.addResult(result)
-            del battle
-    def addResult(self, result):
-        hashValue = dictHash(result)
-        if hashValue in self.results:
-            self.results[hashValue]['count'] += 1
-        else:
-            self.results[hashValue] = {
-                'outcome': result,
-                'count': 1
-            }
 
 class Battle:
     def __init__(self, **kwargs):
         self.terrain = kwargs['terrain']
+        self.rounds = 1
 
         #Parse Paradrops
         if (self.terrain == 'land'):
@@ -89,7 +69,7 @@ class Battle:
 
         #handle defender
         dSubs = self.numberSubmarineStrikes(self.defender, self.attacker)
-        dSubsHits = None
+        dSubHits = None
         if dSubs > 0:
             defenderAssignments = self.params.get('defenderSubAssignments')
             dSubHits, dSubsUsed = self.defender.rollSurpriseStrikes(self.attacker, dSubs, defenderAssignments)
@@ -125,6 +105,7 @@ class Battle:
     def nextRound(self):
         self.attacker.nextRound()
         self.defender.nextRound()
+        self.rounds += 1
     
     def run(self):
         flag = self.handleAAA()
@@ -136,13 +117,13 @@ class Battle:
             #Submarine Warfare
             self.handleSurpriseStrike()
             #Main Combat
-            attackerHits = Dice.roll(self.attacker.getDice())
-            defenderHits = Dice.roll(self.defender.getDice())
+            attackerHits = Dice.roll(*self.attacker.getDice())
+            defenderHits = Dice.roll(*self.defender.getDice())
             self.revertSurpriseStrikeSubs() #Don't Handle Taking SSSUBs in Casualty Logic
             self.defender.takeCasualties(attackerHits)
             self.attacker.takeCasualties(defenderHits)
             #Check Retreat - Adjust Player States
-            conditions = set(self.attacker.checkRetreat(), self.defender.checkRetreat())
+            conditions = set([self.attacker.checkRetreat(), self.defender.checkRetreat()])
             if self.checkEarlyTermination(conditions): break
             self.nextRound()
         return self
@@ -153,7 +134,7 @@ class Battle:
 
         attackerEndIpc = self.attacker.getIpcValueUnits(self.attacker.units) + self.attacker.getIpcValueUnits(self.attacker.retreatedUnits)
         defenderEndIpc = self.defender.getIpcValueUnits(self.defender.units) + self.defender.getIpcValueUnits(self.defender.retreatedUnits)
-        
+    
         assert attackerEndIpc + self.attacker.getIpcValueUnits(attackerCasualties) == self.attacker.initIpc
         assert defenderEndIpc + self.defender.getIpcValueUnits(defenderCasualties) == self.defender.initIpc
 
@@ -163,22 +144,18 @@ class Battle:
         
         return {
             'attacker': {
-                'ipc': {
-                    'start': self.attacker.initIpc,
-                    'end': attackerEndIpc
-                },
+                'ipc':  self.attacker.initIpc - attackerEndIpc,
                 'alive': attackerUnits,
-                'dead': attackerCasualties
+                'dead': attackerCasualties,
+                'state': self.attacker.state
             },
             'defender': {
-                'ipc': {
-                    'start': self.defender.initIpc,
-                    'end': defenderEndIpc
-                },
+                'ipc':  self.defender.initIpc - defenderEndIpc,
                 'alive': defenderUnits,
-                'dead': defenderCasualties
+                'dead': defenderCasualties,
+                'state': self.defender.state
             },
-            'flag': self.attacker.state - self.defender.state
+            'rounds': self.rounds
         }
     
     def checkEarlyTermination(self, conditions):

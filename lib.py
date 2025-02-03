@@ -1,29 +1,34 @@
 from enum import Enum
 
-class Tag(Enum):
+class CustomEnum:
+
+    def __get__(self, instance, owner):
+        return self.value
+
+class Tag(CustomEnum):
     SHIPUNITS = 1
     LANDUNITS = 2
     AIRCRAFT = 3
     SUB = 4
 
-class Role(Enum):
+class Role(CustomEnum):
     ATTACK = 1
     DEFENSE = 2
 
-class PlayerState(Enum):
+class PlayerState(CustomEnum):
     DEAD = 1
     ALIVE = 2
 
-class EndCondition(Enum):
+class EndCondition(CustomEnum):
     ATTACKER_WIN = 1
     DEFENDER_WIN = 2
     DRAW = 3
 
-class Flag(Enum):
+class Flag(CustomEnum):
     NOTRIPLEA = 1
     HASTRIPLEA = 2
 
-class Tech(Enum):
+class Tech(CustomEnum):
     ADV_ART = 0
     ATC = 1
     HEAVY_BOMB = 2
@@ -35,7 +40,7 @@ class Tech(Enum):
     IMP_TPT = 8
     NONE = 9
     
-class Stalemate(Enum):
+class Stalemate(CustomEnum):
     PLANE = 1
     SUB = 2
     LONETPT = 3

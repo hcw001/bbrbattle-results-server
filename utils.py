@@ -10,7 +10,8 @@ class Dice():
     def roll(dice, tags):
         hits = []
         for i, die in enumerate(dice):
-            if die <= (math.floor(random.random() * 6) + 1):
+            roll = math.floor(random.random() * 6) + 1
+            if roll <= die:
                 hits.append(tags[i])
         return hits
     
@@ -63,7 +64,7 @@ class BattleBoard:
                 if (count %2 ==  1): dice.append(unit.getDice()[0])
             else:
                 dice = unit.getDice() * count
-        tags = unit.getTags(hasDestroyer=self.hasDestroyer) * len(dice)
+        tags = [unit.getTags(hasDestroyer=self.hasDestroyer)] * len(dice)
         self.dice.extend(dice)
         self.tags.extend(tags)
     def getDice(self): return self.dice
@@ -73,6 +74,7 @@ class HitRecord:
     def __init__(self):
         self.record = [] #(choice: (unit: string), alt: (units: string[]))
     def __iter__(self): return iter(self.record)
+    def getRecord(self): return list(map(lambda hitAssigned: hitAssigned[0], self.record))
     def add(self, choice, targets):
         self.record.append((choice, targets))
     def remove(self, index):
@@ -111,13 +113,12 @@ def parseCasualties(casualtyList):
 
 def formatUnits(units):
     """Standard API response format. ATPT -> number. Remove empty units."""
+    unitDict ={}
     for unit in units:
         if isEmptyUnit(units[unit]):
-            del units[unit]
             continue
-        if unit == Abbr.ATPT:
-            units[unit] = getCount(units[unit])
-    return units
+        unitDict[unit] = getCount(units[unit])
+    return unitDict
         
     pass
 

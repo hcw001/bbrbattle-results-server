@@ -57,16 +57,16 @@ class Player:
             self.unitDict[Abbr.SUB] = Submarine(self.role, tech=True)
             self.unitDict[Abbr.SSSUB] = SurpriseStrikeSubmarine(self.role, tech=True)
     def updateCasualtyRecord(self, record):
-        self.casualties.append(record)
+        self.casualties.append(record.getRecord())
     def getHasDestroyer(self):
         return True if self.count(Abbr.DTR) > 0 else False
     def getIpcValueUnits(self, units):
         ipcValue = 0
-        for unit in self.units:
-            if not isEmptyUnit(self.units[unit]):
+        for unit in units:
+            if not isEmptyUnit(units[unit]):
                 #Handle Air Transports
                 if unit == Abbr.ATPT:
-                    for pair in self.units[Abbr.ATPT]:
+                    for pair in units[Abbr.ATPT]:
                         #Air Transport
                         ipcValue += self.get(Abbr.ATPT).ipc
                         for item in pair:
@@ -74,7 +74,7 @@ class Player:
                             ipcValue += self.get(item).ipc
                 #Handle Other Units
                 else:
-                    ipcValue += self.count(unit) * self.get(unit).ipc
+                    ipcValue += units[unit] * self.get(unit).ipc
         return ipcValue
     #Needs Testing
     def getDice(self):
@@ -190,7 +190,7 @@ class Player:
     
 class Attacker(Player):
     def __init__(self, **kwargs):
-        super(Attacker, self).__init__(Role.Attack)
+        super(Attacker, self).__init__(Role.ATTACK)
         self.applyTech(kwargs['tech'])
         self.addUnits(kwargs['units'])
         self.orderOfLoss = kwargs['orderOfLoss']
@@ -202,7 +202,7 @@ class Attacker(Player):
             for unit in units:
                 if unit is not None:
                     self.units[unit] += 1
-        self.retreatedUnits[Abbr.ATPT] = [] * len(self.units[Abbr.ATPT])
+        self.retreatedUnits[Abbr.ATPT] = [[]] * len(self.units[Abbr.ATPT])
         self.units[Abbr.ATPT] = 0
     def getBattleBoard(self):
         return BattleBoard(boosts={
@@ -234,7 +234,7 @@ class Attacker(Player):
 
 class Defender(Player):
     def __init__(self, **kwargs):
-        super(Defender, self).__init__(Role.Defense)
+        super(Defender, self).__init__(Role.DEFENSE)
         self.applyTech(kwargs['tech'])
         self.addUnits(kwargs['units'])
         self.orderOfLoss = kwargs['orderOfLoss']
