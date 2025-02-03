@@ -4,7 +4,7 @@ from simulation import Simulation
 #from AccessHistory import fetchState, insertState
 from battle import Battle
 
-allow_origin = "https://www.bbr40.com/"
+allow_origin = "https://www.bbr40.com"
 
 app = Flask(__name__)
 
