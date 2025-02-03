@@ -4,19 +4,21 @@ from simulation import Simulation
 #from AccessHistory import fetchState, insertState
 from battle import Battle
 
-allow_origin = "https://bbr40.com"
-
 app = Flask(__name__)
 
-CORS(app, origins=allow_origin)
+#allow_origin = "https://bbr40.com"
+#CORS(app, origins=allow_origin)
+CORS(app)
+
+#app.config['CORS_HEADERS'] = 'Content-Type'
 
 #Add CORS headers
-@app.after_request
-def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = allow_origin
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
-    return response
+# @app.after_request
+# def add_cors_headers(response):
+#     response.headers['Access-Control-Allow-Origin'] = allow_origin
+#     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+#     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
+#     return response
 
 """
 #History
@@ -61,9 +63,9 @@ def putState():
         return {'error': str(e)}, 400
 """
 
-@app.route('/api/calculate', methods=['POST'])
+@app.route('/api/calculate', methods=['POST, "OPTIONS'])
 def getResults():
-    #try:
+    try:
         # Parses JSON data from the request body
         data = request.get_json() 
         # Stored as python dictionary
@@ -99,10 +101,10 @@ def getResults():
             'outputs': results
         }
         # Return a JSON response
-        return jsonify(response), 200,
+        return _build_post_response(jsonify(response)), 200,
     
-    #except Exception as e:
-        #return {'code': 0, 'message': str(e), 'outputs': {}}, 200
+    except Exception as e:
+        return {'code': 0, 'message': str(e), 'outputs': {}}, 200
 
     
 if __name__ == '__main__':
