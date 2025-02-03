@@ -7,18 +7,63 @@ from battle import Battle
 app = Flask(__name__)
 
 #allow_origin = "https://bbr40.com"
+#https://www.bbr40.com
 #CORS(app, origins=allow_origin)
-CORS(app)
+CORS(app, origins='https://www.bbr40.com')
 
 #app.config['CORS_HEADERS'] = 'Content-Type'
 
 #Add CORS headers
-# @app.after_request
-# def add_cors_headers(response):
-#     response.headers['Access-Control-Allow-Origin'] = allow_origin
-#     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-#     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
-#     return response
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = 'https://www.bbr40.com'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    return response
+
+
+@app.route('/api/calculate', methods=['POST, "OPTIONS'])
+def getResults():
+    try:
+        # Parses JSON data from the request body
+        data = request.get_json() 
+        # Stored as python dictionary
+        terrain = data.get('terrain')
+        attackerTech = data.get('attackerTech')
+        defenderTech = data.get('defenderTech')
+        attackerOrderOfLoss = data.get('attackerOrderOfLoss')
+        defenderOrderOfLoss = data.get('defenderOrderOfLoss')
+        attackerUnits = data.get('attackerUnits')
+        defenderUnits = data.get('defenderUnits')
+        targetSelectAssigments = data.get('targetSelectAssignments')
+        attackerSubAssignments = data.get('attackerSubAssignments')
+        defenderSubAssignments = data.get('defenderSubAssignments')
+        paradrops = data.get('paradrops')
+
+        results = Simulation(
+            terrain=terrain,
+            attackerTech=attackerTech,
+            defenderTech=defenderTech,
+            attackerOrderOfLoss=attackerOrderOfLoss,
+            defenderOrderOfLoss=defenderOrderOfLoss,
+            attackerUnits=attackerUnits,
+            defenderUnits=defenderUnits,
+            targetSelectAssigments=targetSelectAssigments,
+            attackerSubAssignments=attackerSubAssignments,
+            defenderSubAssignments=defenderSubAssignments,
+            paradrops=paradrops
+        ).run().dump()
+        
+        response = {
+            'code': 1,
+            'message': 'OK',
+            'outputs': results
+        }
+        # Return a JSON response
+        return jsonify(response), 200,
+    
+    except Exception as e:
+        return {'code': 0, 'message': str(e), 'outputs': {}}, 200
 
 """
 #History
@@ -62,49 +107,6 @@ def putState():
     except Exception as e:
         return {'error': str(e)}, 400
 """
-
-@app.route('/api/calculate', methods=['POST, "OPTIONS'])
-def getResults():
-    try:
-        # Parses JSON data from the request body
-        data = request.get_json() 
-        # Stored as python dictionary
-        terrain = data.get('terrain')
-        attackerTech = data.get('attackerTech')
-        defenderTech = data.get('defenderTech')
-        attackerOrderOfLoss = data.get('attackerOrderOfLoss')
-        defenderOrderOfLoss = data.get('defenderOrderOfLoss')
-        attackerUnits = data.get('attackerUnits')
-        defenderUnits = data.get('defenderUnits')
-        targetSelectAssigments = data.get('targetSelectAssignments')
-        attackerSubAssignments = data.get('attackerSubAssignments')
-        defenderSubAssignments = data.get('defenderSubAssignments')
-        paradrops = data.get('paradrops')
-
-        results = Simulation(
-            terrain=terrain,
-            attackerTech=attackerTech,
-            defenderTech=defenderTech,
-            attackerOrderOfLoss=attackerOrderOfLoss,
-            defenderOrderOfLoss=defenderOrderOfLoss,
-            attackerUnits=attackerUnits,
-            defenderUnits=defenderUnits,
-            targetSelectAssigments=targetSelectAssigments,
-            attackerSubAssignments=attackerSubAssignments,
-            defenderSubAssignments=defenderSubAssignments,
-            paradrops=paradrops
-        ).run().dump()
-        
-        response = {
-            'code': 1,
-            'message': 'OK',
-            'outputs': results
-        }
-        # Return a JSON response
-        return _build_post_response(jsonify(response)), 200,
-    
-    except Exception as e:
-        return {'code': 0, 'message': str(e), 'outputs': {}}, 200
 
     
 if __name__ == '__main__':
