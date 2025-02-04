@@ -48,7 +48,7 @@ class Battle:
 
     def numberSubmarineStrikes(self, player, opponent):
         if (self.terrain == 'land'): return 0
-        if opponent.count(*SHIPUNITS, *SUBUNITS) == 0: return 0
+        if opponent.count(*(SHIPUNITS+SUBUNITS)) == 0: return 0
         if (player.tech == Tech.SUP_SUB): 
             if opponent.count(Abbr.DTR) > 0: 
                 return max(
@@ -106,6 +106,8 @@ class Battle:
         self.attacker.nextRound()
         self.defender.nextRound()
         self.rounds += 1
+        if self.rounds > 100:
+            raise AssertionError("Infinite Run.")
     
     def run(self):
         flag = self.handleAAA()

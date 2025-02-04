@@ -9,7 +9,7 @@ SHIPUNITS = (
     Abbr.CSR, Abbr.BTS, Abbr.BTSx, Abbr.sBTS, Abbr.sBTSx, Abbr.sBTSxx, Abbr.DTR,
     Abbr.ACC, Abbr.ACCx, Abbr.sACC, Abbr.sACCx, Abbr.sACCxx, Abbr.TPT
 )
-SUBUNITS = (Abbr.SUB)
+SUBUNITS = (Abbr.SUB,)
 
 REPEATS = 10000
 

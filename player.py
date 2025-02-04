@@ -249,8 +249,9 @@ class Defender(Player):
             return [], Flag.NOTRIPLEA
         dice = sorted(dice, reverse=True)
         dice = dice[:numberOfPlanes]
-        numberOfHits = len(Dice.roll(dice))
-        return [[Tag.AIRCRAFT]] * numberOfHits, Flag.HASTRIPLEA
+        tags = [[Tag.AIRCRAFT]] * len(dice)
+        hits = Dice.roll(dice, tags)
+        return hits, Flag.HASTRIPLEA
     def getBattleBoard(self):
         return BattleBoard(boosts={
             'Cruiser Boost': {

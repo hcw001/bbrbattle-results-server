@@ -9,14 +9,14 @@ app = Flask(__name__)
 #allow_origin = "https://www.bbr40.com"
 #https://www.bbr40.com
 #CORS(app, origins=allow_origin)
-CORS(app, origins='https://www.bbr40.com')
+CORS(app, origins='http://localhost:3000')
 
 #app.config['CORS_HEADERS'] = 'Content-Type'
 
 #Add CORS headers
 @app.after_request
 def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = 'https://www.bbr40.com'
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     return response
@@ -24,7 +24,10 @@ def add_cors_headers(response):
 
 @app.route('/api/calculate', methods=['POST', 'OPTIONS'])
 def getResults():
-    try:
+        #Handle OPTIONS method
+        if request.method == 'OPTIONS':
+             return '', 200
+    #try:
         # Parses JSON data from the request body
         data = request.get_json() 
         # Stored as python dictionary
@@ -62,7 +65,7 @@ def getResults():
         # Return a JSON response
         return jsonify(response), 200,
     
-    except Exception as e:
+    #except Exception as e:
         return {'code': 0, 'message': str(e), 'outputs': {}}, 200
 
 """
