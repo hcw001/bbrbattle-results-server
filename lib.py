@@ -1,9 +1,10 @@
 from enum import Enum
 
-class CustomEnum:
+class CustomEnum(Enum):
 
     def __get__(self, instance, owner):
         return self.value
+    
 
 class Tag(CustomEnum):
     SHIPUNITS = 1

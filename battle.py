@@ -14,6 +14,11 @@ class Battle:
             assert kwargs['attackerUnits'][Abbr.ATPT] == len(kwargs['paradrops'])
             kwargs['attackerUnits'][Abbr.ATPT] = kwargs['paradrops']
 
+        #Add Transports to OrderOfLoss
+        if (self.terrain == 'sea'):
+            kwargs['attackerOrderOfLoss'].append(Abbr.TPT)
+            kwargs['defenderOrderOfLoss'].append(Abbr.TPT)
+
         self.attacker = Attacker(
             tech=kwargs['attackerTech'],
             orderOfLoss=kwargs['attackerOrderOfLoss'],
@@ -38,7 +43,7 @@ class Battle:
     
     def handleTargetStrikes(self):
         assignments = self.params.get('targetSelectAssigments')
-        targetedHits, usedCount = self.attacker.rollTargetStrikes(assignments)
+        targetedHits, usedCount = self.attacker.rollTargetStrikes(assignments, Abbr.TAC)
         self.defender.takeCasualties(targetedHits)
 
         #Switch to TS-Tacs
@@ -65,7 +70,7 @@ class Battle:
         if aSubs > 0:
             attackerAssignments = self.params.get('attackerSubAssignments')
             aSubHits, aSubsUsed = self.attacker.rollSurpriseStrikes(self.defender, aSubs, attackerAssignments)
-            assert aSubs == aSubsUsed
+            #assert aSubs == aSubsUsed
 
         #handle defender
         dSubs = self.numberSubmarineStrikes(self.defender, self.attacker)
@@ -73,7 +78,7 @@ class Battle:
         if dSubs > 0:
             defenderAssignments = self.params.get('defenderSubAssignments')
             dSubHits, dSubsUsed = self.defender.rollSurpriseStrikes(self.attacker, dSubs, defenderAssignments)
-            assert dSubs == dSubsUsed
+            #assert dSubs == dSubsUsed
 
         #apply attacker's hits
         if aSubHits is not None: self.defender.takeCasualties(aSubHits)

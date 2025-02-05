@@ -133,7 +133,7 @@ class Player:
         else: return Stalemate.NONE
     def nextRound(self):
         self.isFirstRound = False
-    def rollTargetStrikes(self, assignments):
+    def rollTargetStrikes(self, assignments, unit):
         #assignments: <[unit: string]: number[]>
         usedCount = 0
         hits = []
@@ -141,11 +141,11 @@ class Player:
             for target in assignments[unit]:
                 #Tags take individual unit names
                 usedCount += target
-                strikes = Dice.roll([3]*target, [unit] * target)
+                strikes = Dice.roll(self.get(unit).getDice()*target, [unit] * target)
                 if len(strikes) > 0:
                     #Handle Capital Ships
+                    hits.append([strikes[0]])
                     if hasattr(self.get(unit), 'downgrade'):
-                        hits.append(strikes[0])
                         if len(strikes) > 1:
                             unitName = self.get(unit).downgrade
                             for _ in len(strikes-1):
@@ -155,16 +155,12 @@ class Player:
                                     unitName = self.get(unitName).downgrade
                                 else:
                                     break
-                    else:
-                        #Regular Units
-                        hits.append(strikes[0])
         return hits, usedCount
     
     def rollSurpriseStrikes(self, opponent, subCount, assignments):
         #Base Condition - Completely Allocated
-        if self.isFirstRound:
-            assert validateAssignments(opponent, assignments, subCount)
-            return self.rollTargetStrikes(assignments)
+        if self.isFirstRound and validateAssignments(opponent, assignments, subCount):
+            return self.rollTargetStrikes(assignments, Abbr.SUB)
         
         #Reassign Sub Strikes
         assignments = {}
@@ -178,15 +174,16 @@ class Player:
                         subCount -= 1
                     else:
                         break
-        while subCount > 0:
-            for unit in assignments:
-                for targetIdx in assignments[unit]:
-                    if subCount > 0:
-                        assignments[unit][targetIdx] += 1
-                        subCount -= 1
-                    else:
-                        break
-        return self.rollTargetStrikes(assignments)
+        if len(assignments) > 0:
+            while subCount > 0:
+                for unit in assignments:
+                    for targetIdx in range(len(assignments[unit])):
+                        if subCount > 0:
+                            assignments[unit][targetIdx] += 1
+                            subCount -= 1
+                        else:
+                            break
+        return self.rollTargetStrikes(assignments, Abbr.SUB)
     
 class Attacker(Player):
     def __init__(self, **kwargs):

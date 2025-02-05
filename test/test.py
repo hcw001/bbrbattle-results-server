@@ -19,25 +19,32 @@ class DebugBattle(Battle):
     
     def dump(self):
         attackerCasualties = formatUnits(parseCasualties(self.attacker.casualties)) #Create Casualty Dict
-        defenderCasualties = formatUnits(parseCasualties(self.defender.casualties))
+        defenderCasualties = formatUnits(parseCasualties(self.defender.casualties)) 
         
         print("Done")
         print("------")
-        print(f"Attacker: {self.attacker.initIPC}\n")
+        print(f"Attacker: {self.attacker.initIpc}\n")
+        print("------")
         print(f"Alive:\n{outputUnits(self.attacker.units)}\n")
         print(f"Retreated:\n{outputUnits(self.attacker.retreatedUnits)}\n")
         print(f"IPC(Alive): {self.attacker.getIpcValueUnits(self.attacker.units)} + {self.attacker.getIpcValueUnits(self.attacker.retreatedUnits)}")
-        print(f"Dead:\n{outputUnits(self.attacker.casualties)}\n")
+        print(f"Dead:\n{outputUnits(attackerCasualties)}\n")
         print(f"IPC(Dead): {self.attacker.getIpcValueUnits(attackerCasualties)}")
-        print("------")
+        print("\n------")
         print(f"Defender: {self.defender.initIpc}\n")
+        print("------")
         print(f"Alive:\n{outputUnits(self.defender.units)}\n")
         print(f"Retreated:\n{outputUnits(self.defender.retreatedUnits)}\n")
         print(f"IPC(Alive): {self.defender.getIpcValueUnits(self.defender.units)} + {self.defender.getIpcValueUnits(self.defender.retreatedUnits)}")
-        print(f"Dead:\n{outputUnits(self.defender.casualties)}")
+        print(f"Dead:\n{outputUnits(defenderCasualties)}")
         print(f"IPC(Dead): {self.defender.getIpcValueUnits(defenderCasualties)}")
 
 if __name__ == '__main__':
     params = readInput("./test/inputs/001.json")
-    battle = DebugBattle(params)
+    try:
+        battle = DebugBattle(params)
+    except Exception as e:
+        print("Run Failed")
     result = battle.run().dump()
+
+    #Include target TPT

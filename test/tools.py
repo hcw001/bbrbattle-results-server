@@ -12,6 +12,6 @@ def outputUnits(units):
     for unit in units:
         if not isEmptyUnit(units[unit]):
             output += f"{unit:<10}: {units[unit]:<3}\n"
-    return output
+    return "None" if output == ""  else output
 
 

@@ -40,7 +40,7 @@ def getValidUnits(tags):
         else:
             #raise ValueError("Unexpected Tag Encountered.")
             assert len(tags) == 1
-            assert tag in Abbr
+            assert tag in [item.value for item in Abbr]
             valid.update(tag)
     return list(valid)
     
@@ -94,9 +94,9 @@ def numberOfSubsInAssignments(assignments):
     return count
 
 def validateAssignments(opponent, assignments, subCount):
-    assert allAssignmentsPresent(opponent, assignments)
-    assert numberOfSubsInAssignments == subCount
-    return True
+    cond1 = allAssignmentsPresent(opponent, assignments)
+    cond2 = numberOfSubsInAssignments == subCount
+    return cond1 and cond2
 
 
 #Dump Utils
