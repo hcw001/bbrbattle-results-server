@@ -29,8 +29,9 @@ class Battle:
             orderOfLoss=kwargs['defenderOrderOfLoss'],
             units=kwargs['defenderUnits']
         )
+        
         self.params = dict(filter(lambda item: item[0] in [
-            'targetSelectAssigments',
+            'targetSelectAssignments',
             'attackerSubAssignments',
             'defenderSubAssignments',
         ], kwargs.items()))
@@ -42,7 +43,7 @@ class Battle:
         return flag
     
     def handleTargetStrikes(self):
-        assignments = self.params.get('targetSelectAssigments')
+        assignments = self.params.get('targetSelectAssignments')
         targetedHits, usedCount = self.attacker.rollTargetStrikes(assignments, Abbr.TAC)
         self.defender.takeCasualties(targetedHits)
 
@@ -62,6 +63,12 @@ class Battle:
         else:
             if opponent.count(Abbr.DTR) > 0: return 0
         return player.count(Abbr.SUB)
+    
+    def settleSurpriseStrike(self, aSubHits, dSubHits):
+         #apply attacker's hits
+        if aSubHits is not None: self.defender.takeCasualties(aSubHits)
+        #apply defender's hits
+        if dSubHits is not None: self.attacker.takeCasualties(dSubHits)
 
     def handleSurpriseStrike(self):
         #handle attacker
@@ -80,20 +87,17 @@ class Battle:
             dSubHits, dSubsUsed = self.defender.rollSurpriseStrikes(self.attacker, dSubs, defenderAssignments)
             #assert dSubs == dSubsUsed
 
-        #apply attacker's hits
-        if aSubHits is not None: self.defender.takeCasualties(aSubHits)
-        #apply defender's hits
-        if dSubHits is not None: self.attacker.takeCasualties(dSubHits)
+        self.settleSurpriseStrike(aSubHits, dSubHits)
 
         #swap attacker subs
         assert self.attacker.count(Abbr.SSSUB) == 0
-        assert self.attacker.count(Abbr.SUB) >= aSubs
+        #assert self.attacker.count(Abbr.SUB) >= aSubs
         self.attacker.units[Abbr.SUB] -= aSubs
         self.attacker.units[Abbr.SSSUB] += aSubs
         
         #swap defender subs
         assert self.defender.count(Abbr.SSSUB) == 0
-        assert self.defender.count(Abbr.SUB) >= dSubs
+        #assert self.defender.count(Abbr.SUB) >= dSubs
         self.defender.units[Abbr.SUB] -= dSubs
         self.defender.units[Abbr.SSSUB] += dSubs
         
@@ -113,6 +117,15 @@ class Battle:
         self.rounds += 1
         if self.rounds > 100:
             raise AssertionError("Infinite Run.")
+        
+    def rollCombat(self):
+        attackerHits = Dice.roll(*self.attacker.getDice())
+        defenderHits = Dice.roll(*self.defender.getDice())
+        return attackerHits, defenderHits
+    
+    def settleCombat(self, attackerHits, defenderHits):
+        self.defender.takeCasualties(attackerHits)
+        self.attacker.takeCasualties(defenderHits)
     
     def run(self):
         flag = self.handleAAA()
@@ -124,11 +137,9 @@ class Battle:
             #Submarine Warfare
             self.handleSurpriseStrike()
             #Main Combat
-            attackerHits = Dice.roll(*self.attacker.getDice())
-            defenderHits = Dice.roll(*self.defender.getDice())
+            attackerHits, defenderHits = self.rollCombat()
             self.revertSurpriseStrikeSubs() #Don't Handle Taking SSSUBs in Casualty Logic
-            self.defender.takeCasualties(attackerHits)
-            self.attacker.takeCasualties(defenderHits)
+            self.settleCombat(attackerHits, defenderHits)
             #Check Retreat - Adjust Player States
             conditions = set([self.attacker.checkRetreat(), self.defender.checkRetreat()])
             if self.checkEarlyTermination(conditions): break

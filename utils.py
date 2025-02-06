@@ -41,7 +41,7 @@ def getValidUnits(tags):
             #raise ValueError("Unexpected Tag Encountered.")
             assert len(tags) == 1
             assert tag in [item.value for item in Abbr]
-            valid.update(tag)
+            valid.add(tag)
     return list(valid)
     
 class BattleBoard:
@@ -83,7 +83,7 @@ class HitRecord:
 #Surprise Strike Utilities
 def allAssignmentsPresent(opponent, assignments):
     for unit in assignments:
-        targets = len(filter(lambda target: target > 0, assignments[unit]))
+        targets = len(list(filter(lambda target: target > 0, assignments[unit])))
         if not (targets <= opponent.count(unit)): return False
     return True 
 

@@ -1,0 +1,121 @@
+{
+    "terrain": "sea",
+    "attackerTech": 9,
+    "defenderTech": 9,
+    "attackerOrderOfLoss": [
+        "StrategicBomber",
+        "AircraftCarrier",
+        "DamagedAircraftCarrier",
+        "Submarine",
+        "Destroyer",
+        "DamagedBattleship",
+        "Battleship",
+        "Fighter",
+        "Cruiser",
+        "TacticalBomber"
+    ],
+    "defenderOrderOfLoss": [
+        "Submarine",
+        "AircraftCarrier",
+        "DamagedAircraftCarrier",
+        "Destroyer",
+        "DamagedBattleship",
+        "TacticalBomber",
+        "Battleship",
+        "Cruiser",
+        "Fighter"
+    ],
+    "attackerUnits": {
+        "Fighter": 0,
+        "TacticalBomber": 5,
+        "StrategicBomber": 0,
+        "Submarine": 6,
+        "Destroyer": 0,
+        "Cruiser": 0,
+        "Battleship": 0,
+        "DamagedBattleship": 0,
+        "SuperBattleship": 0,
+        "SuperBattleshipX": 0,
+        "DamagedSuperBattleship": 0,
+        "AircraftCarrier": 0,
+        "DamagedAircraftCarrier": 0,
+        "SuperAircraftCarrier": 0,
+        "SuperAircraftCarrierX": 0,
+        "DamagedSuperAircraftCarrier": 0
+    },
+    "defenderUnits": {
+        "Fighter": 0,
+        "TacticalBomber": 0,
+        "Submarine": 6,
+        "Destroyer": 0,
+        "Transport": 0,
+        "Cruiser": 0,
+        "Battleship": 0,
+        "DamagedBattleship": 0,
+        "SuperBattleship": 0,
+        "SuperBattleshipX": 0,
+        "DamagedSuperBattleship": 0,
+        "AircraftCarrier": 1,
+        "DamagedAircraftCarrier": 0,
+        "SuperAircraftCarrier": 0,
+        "SuperAircraftCarrierX": 0,
+        "DamagedSuperAircraftCarrier": 0
+    },
+    "targetSelectAssignments": {
+        "Destroyer": [],
+        "DamagedBattleship": [],
+        "DamagedSuperBattleship": [],
+        "AircraftCarrier": [
+            1
+        ],
+        "DamagedAircraftCarrier": [],
+        "SuperAircraftCarrier": [],
+        "SuperAircraftCarrierX": [],
+        "DamagedSuperAircraftCarrier": []
+    },
+    "attackerSubAssignments": {
+        "Submarine": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "Cruiser": [],
+        "Battleship": [],
+        "DamagedBattleship": [],
+        "SuperBattleship": [],
+        "SuperBattleshipX": [],
+        "DamagedSuperBattleship": [],
+        "AircraftCarrier": [
+            0
+        ],
+        "DamagedAircraftCarrier": [],
+        "SuperAircraftCarrier": [],
+        "SuperAircraftCarrierX": [],
+        "DamagedSuperAircraftCarrier": []
+    },
+    "defenderSubAssignments": {
+        "Submarine": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "Cruiser": [],
+        "Battleship": [],
+        "DamagedBattleship": [],
+        "SuperBattleship": [],
+        "SuperBattleshipX": [],
+        "DamagedSuperBattleship": [],
+        "AircraftCarrier": [],
+        "DamagedAircraftCarrier": [],
+        "SuperAircraftCarrier": [],
+        "SuperAircraftCarrierX": [],
+        "DamagedSuperAircraftCarrier": []
+    },
+    "paradrops": []
+}
