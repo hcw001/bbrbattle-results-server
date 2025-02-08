@@ -1,6 +1,7 @@
-from .tools import readInput, outputUnits
+from .tools import readInput, outputUnits, outputWinRates
 from battle import Battle
 from utils import formatUnits, parseCasualties
+from simulation import Simulation
 
 TESTS = {
     'start': True,
@@ -8,8 +9,13 @@ TESTS = {
     'preCombatUnits': False,
     'combatHitSummary': False,
     'surpriseStrikeHitSummary': False,
-    'endSummary': False
+    'endSummary': True
 }
+
+class TestSimulation(Simulation):
+    def __init__(self, params):
+        super().__init__(**params)
+        self.N = 10_000
 
 class DebugBattle(Battle):
     def __init__(self, params):
@@ -55,10 +61,9 @@ class DebugBattle(Battle):
         return super().settleSurpriseStrike(aSubHits, dSubHits)
     
     def dump(self):
-        attackerCasualties = formatUnits(parseCasualties(self.attacker.casualties)) #Create Casualty Dict
-        defenderCasualties = formatUnits(parseCasualties(self.defender.casualties)) 
-        
         if TESTS['endSummary']:
+            attackerCasualties = formatUnits(parseCasualties(self.attacker.casualties, self.attacker.unitDict)) #Create Casualty Dict
+            defenderCasualties = formatUnits(parseCasualties(self.defender.casualties, self.defender.unitDict)) 
             print("Done")
             print("------")
             print(f"Attacker: {self.attacker.initIpc}\n")
@@ -76,13 +81,18 @@ class DebugBattle(Battle):
             print(f"IPC(Alive): {self.defender.getIpcValueUnits(self.defender.units)} + {self.defender.getIpcValueUnits(self.defender.retreatedUnits)}")
             print(f"Dead:\n{outputUnits(defenderCasualties)}")
             print(f"IPC(Dead): {self.defender.getIpcValueUnits(defenderCasualties)}")
+        super().dump()
 
 if __name__ == '__main__':
     params = readInput("./test/inputs/002.json")
     try:
-        battle = DebugBattle(params)
+        #battle = DebugBattle(params)
+        sim = TestSimulation(params)
     except Exception as e:
-        print("Run Failed")
-    result = battle.run().dump()
+        print(f"Run Failed: {e}")
+    #result = battle.run().dump()
+    result = sim.run().dump()
+    outputWinRates(result['stats']['endCondition'])
 
-    #Include target TPT
+
+#Taking capital ship casualties - accounting

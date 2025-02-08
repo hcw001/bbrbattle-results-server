@@ -21,9 +21,10 @@ class PlayerState(CustomEnum):
     ALIVE = 2
 
 class EndCondition(CustomEnum):
-    ATTACKER_WIN = 1
-    DEFENDER_WIN = 2
-    DRAW = 3
+    ATTACKER_WIN = 0
+    DEFENDER_WIN = 1
+    DRAW = 2
+    STALEMATE = 3
 
 class Flag(CustomEnum):
     NOTRIPLEA = 1

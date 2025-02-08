@@ -27,6 +27,13 @@ class Simulation:
                 'count': 1
             }
     def dump(self):
+        #Calculate Result Distribution
+        endConditions = [0,0,0,0]
+        for hashKey, data in self.results.items():
+            endConditions[data['outcome']['endCondition']] += data['count']
+        
+        endConditions = [condition / self.N for condition in endConditions]
+        assert sum(endConditions) == 1
 
         #Order outcomes by casualty
         attackerOutcomes = sorted([{**props['outcome']['attacker'], 'rounds': props['outcome']['rounds'], 'count': props['count']} for key, props in self.results.items()], key=lambda props: props['ipc'], reverse=True)
@@ -108,7 +115,8 @@ class Simulation:
                 'stats': {
                     'attackerIpc': aveAttackerIPC,
                     'defenderIpc': aveDefenderIPC,
-                    'numberRounds': aveNumberRounds
+                    'numberRounds': aveNumberRounds,
+                    'endCondition': endConditions
                 }
             }
 

@@ -1,5 +1,5 @@
 from player import Attacker, Defender
-from lib import Flag, PlayerState, Stalemate, Tech
+from lib import Flag, PlayerState, Stalemate, Tech, EndCondition
 from config import PLANES, SHIPUNITS, SUBUNITS
 from utils import Dice, formatUnits, parseCasualties, combineUnits
 from units import Abbr
@@ -147,14 +147,33 @@ class Battle:
         return self
     
     def dump(self):
-        attackerCasualties = formatUnits(parseCasualties(self.attacker.casualties)) #Create Casualty Dict
-        defenderCasualties = formatUnits(parseCasualties(self.defender.casualties))
+        attackerCasualties = formatUnits(parseCasualties(self.attacker.casualties, self.attacker.unitDict)) #Create Casualty Dict
+        defenderCasualties = formatUnits(parseCasualties(self.defender.casualties, self.defender.unitDict))
 
-        attackerEndIpc = self.attacker.getIpcValueUnits(self.attacker.units) + self.attacker.getIpcValueUnits(self.attacker.retreatedUnits)
-        defenderEndIpc = self.defender.getIpcValueUnits(self.defender.units) + self.defender.getIpcValueUnits(self.defender.retreatedUnits)
+        attackerAliveIpc = self.attacker.getIpcValueUnits(self.attacker.units)
+        attackerRetreatedIpc = self.attacker.getIpcValueUnits(self.attacker.retreatedUnits)
+        attackerCasualtiesIpc = self.attacker.getIpcValueUnits(attackerCasualties)
+
+        defenderAliveIpc = self.defender.getIpcValueUnits(self.defender.units)
+        defenderRetreatedIpc = self.defender.getIpcValueUnits(self.defender.retreatedUnits)
+        defenderCasualtiesIpc = self.defender.getIpcValueUnits(defenderCasualties)
+
+        attackerEndIpc = attackerAliveIpc + attackerRetreatedIpc
+        defenderEndIpc = defenderAliveIpc + defenderRetreatedIpc
     
-        assert attackerEndIpc + self.attacker.getIpcValueUnits(attackerCasualties) == self.attacker.initIpc
-        assert defenderEndIpc + self.defender.getIpcValueUnits(defenderCasualties) == self.defender.initIpc
+        assert attackerEndIpc + attackerCasualtiesIpc == self.attacker.initIpc
+        assert defenderEndIpc +  defenderCasualtiesIpc == self.defender.initIpc
+
+        #Evaluate end condition
+        if attackerAliveIpc == 0 and defenderAliveIpc == 0:
+            endCondition = EndCondition.DRAW
+        elif defenderAliveIpc > 0 and attackerAliveIpc == 0:
+            endCondition = EndCondition.DEFENDER_WIN
+        elif attackerAliveIpc > 0 and defenderAliveIpc == 0:
+            endCondition = EndCondition.ATTACKER_WIN
+        else:
+            assert attackerAliveIpc > 0 and defenderAliveIpc > 0
+            endCondition = EndCondition.STALEMATE
 
         #combineUnits standardizes ATPT -> number
         attackerUnits = combineUnits(self.attacker.units, self.attacker.retreatedUnits)
@@ -173,7 +192,8 @@ class Battle:
                 'dead': defenderCasualties,
                 'state': self.defender.state
             },
-            'rounds': self.rounds
+            'rounds': self.rounds,
+            'endCondition': endCondition
         }
     
     def checkEarlyTermination(self, conditions):

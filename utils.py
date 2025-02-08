@@ -100,7 +100,7 @@ def validateAssignments(opponent, assignments, subCount):
 
 
 #Dump Utils
-def parseCasualties(casualtyList):
+def parseCasualties(casualtyList, unitDict):
     """Parse casualty list to unit dictionary."""
     units = {}
     for battle in casualtyList:
@@ -109,6 +109,16 @@ def parseCasualties(casualtyList):
                 units[unit] += 1
             else:
                 units[unit] = 1
+
+    for capitalShip in [Abbr.BTS, Abbr.sBTS, Abbr.ACC, Abbr.sACC]:
+        ship = capitalShip
+        while hasattr(unitDict[ship], 'downgrade'):
+            damagedShip = unitDict[ship].downgrade
+            if ship in units and damagedShip in units:
+                overlap = min(units[ship], units[damagedShip])
+                units[damagedShip] -= overlap
+            ship = damagedShip
+
     return units
 
 def formatUnits(units):
