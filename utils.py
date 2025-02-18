@@ -111,13 +111,20 @@ def parseCasualties(casualtyList, unitDict):
                 units[unit] = 1
 
     for capitalShip in [Abbr.BTS, Abbr.sBTS, Abbr.ACC, Abbr.sACC]:
+        rootShip = capitalShip
         ship = capitalShip
         while hasattr(unitDict[ship], 'downgrade'):
             damagedShip = unitDict[ship].downgrade
-            if ship in units and damagedShip in units:
-                overlap = min(units[ship], units[damagedShip])
-                units[damagedShip] -= overlap
+            # if ship in units and damagedShip in units:
+            #     overlap = min(units[ship], units[damagedShip])
+            #     units[damagedShip] -= overlap
+            if ship in units:
+                units[ship] = 0
             ship = damagedShip
+        if ship in units:
+            dead = units[ship]
+            units[ship] = 0
+            units[rootShip] = dead
 
     return units
 

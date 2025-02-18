@@ -7,7 +7,7 @@ class Simulation:
     def __init__(self, **kwargs):
         self.params = kwargs
         self.results = {}
-        self.N = 1000
+        self.N = 20000
     def run(self):
         for _ in range(self.N):
             battleParams = copy.deepcopy(self.params)

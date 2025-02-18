@@ -137,6 +137,7 @@ class Player:
         #assignments: <[unit: string]: number[]>
         usedCount = 0
         hits = []
+        if assignments is None: return hits, usedCount
         for unit in assignments:
             for target in assignments[unit]:
                 #Tags take individual unit names
@@ -148,7 +149,7 @@ class Player:
                     if hasattr(self.get(unit), 'downgrade'):
                         if len(strikes) > 1:
                             unitName = self.get(unit).downgrade
-                            for _ in len(strikes-1):
+                            for _ in range(len(strikes)-1):
                                 #Take Downgraded Unit
                                 hits.append([unitName])
                                 if hasattr(self.get(unitName), 'downgrade'):

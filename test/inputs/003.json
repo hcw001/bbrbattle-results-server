@@ -1,0 +1,56 @@
+{
+    "terrain": "land",
+    "attackerTech": 9,
+    "defenderTech": 9,
+    "attackerOrderOfLoss": [
+        "StrategicBomber",
+        "Infantry",
+        "MechanizedInfantry",
+        "Cavalry",
+        "Artillery",
+        "Tank",
+        "Fighter",
+        "TacticalBomber"
+    ],
+    "defenderOrderOfLoss": [
+        "AAA",
+        "Cavalry",
+        "StrategicBomber",
+        "Infantry",
+        "MechanizedInfantry",
+        "Artillery",
+        "Tank",
+        "TacticalBomber",
+        "Fighter"
+    ],
+    "attackerUnits": {
+        "Infantry": 0,
+        "Cavalry": 0,
+        "MechanizedInfantry": 3,
+        "Artillery": 0,
+        "Tank": 1,
+        "Fighter": 0,
+        "TacticalBomber": 0,
+        "StrategicBomber": 0,
+        "AirTransport": 0,
+        "CruiserBombard": 0,
+        "BattleshipBombard": 0,
+        "SuperBattleship": 0,
+        "SuperBattleshipX": 0
+    },
+    "defenderUnits": {
+        "Infantry": 2,
+        "Cavalry": 0,
+        "MechanizedInfantry": 0,
+        "Artillery": 1,
+        "Tank": 0,
+        "Fighter": 0,
+        "TacticalBomber": 0,
+        "StrategicBomber": 0,
+        "AAA": 0
+    },
+    "targetSelectAssignments": {},
+    "attackerSubAssignments": {},
+    "defenderSubAssignments": {},
+    "paradrops": []
+}

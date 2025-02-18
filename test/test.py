@@ -84,7 +84,7 @@ class DebugBattle(Battle):
         super().dump()
 
 if __name__ == '__main__':
-    params = readInput("./test/inputs/002.json")
+    params = readInput("./test/inputs/003.json")
     try:
         #battle = DebugBattle(params)
         sim = TestSimulation(params)
