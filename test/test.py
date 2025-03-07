@@ -2,23 +2,45 @@ from .tools import readInput, outputUnits, outputWinRates
 from battle import Battle
 from utils import formatUnits, parseCasualties
 from simulation import Simulation
+import copy
 
 TESTS = {
-    'start': True,
+    'start': False,
+    'startUnits': True,
     'round': False,
     'preCombatUnits': False,
     'combatHitSummary': False,
     'surpriseStrikeHitSummary': False,
-    'endSummary': True
+    'endSummary': False
 }
 
 class TestSimulation(Simulation):
     def __init__(self, params):
         super().__init__(**params)
         self.N = 10_000
+    def run(self):
+        if [TESTS['startUnits']]:
+            battleParams = copy.deepcopy(self.params)
+            battle = DebugBattle(**battleParams)
+            print(f"""
+    Attacker Units:
+{outputUnits(battle.attacker.units)}
+
+    Defender Units:
+{outputUnits(battle.defender.units)}
+            """)
+            del battle
+        for _ in range(self.N):
+            battleParams = copy.deepcopy(self.params)
+            battle = DebugBattle(**battleParams)
+            result = battle.run().dump()
+            self.addResult(copy.deepcopy(result))
+            del battle
+            del battleParams
+        return self
 
 class DebugBattle(Battle):
-    def __init__(self, params):
+    def __init__(self, **params):
         super().__init__(**params)
         if TESTS['start']:
             print("Start\n")
@@ -81,18 +103,21 @@ class DebugBattle(Battle):
             print(f"IPC(Alive): {self.defender.getIpcValueUnits(self.defender.units)} + {self.defender.getIpcValueUnits(self.defender.retreatedUnits)}")
             print(f"Dead:\n{outputUnits(defenderCasualties)}")
             print(f"IPC(Dead): {self.defender.getIpcValueUnits(defenderCasualties)}")
-        super().dump()
+        return super().dump()
 
 if __name__ == '__main__':
-    params = readInput("./test/inputs/003.json")
-    try:
-        #battle = DebugBattle(params)
+    for i in range(1,5):
+        print(f"Test {i}")
+        params = readInput(f"./test/inputs/00{i}.json")
+        #try:
+            #battle = DebugBattle(params)
         sim = TestSimulation(params)
-    except Exception as e:
-        print(f"Run Failed: {e}")
-    #result = battle.run().dump()
-    result = sim.run().dump()
-    outputWinRates(result['stats']['endCondition'])
+        result = sim.run().dump()
+        outputWinRates(result['stats']['endCondition'])
+        #except Exception as e:
+            #print(f"Run Failed: {e}")
+            #break
+        #result = battle.run().dump()
 
 
 #Taking capital ship casualties - accounting

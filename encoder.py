@@ -12,3 +12,8 @@ def dictHash(dictionary):
 
     # Return the hexadecimal representation of the hash
     return hashObject.hexdigest()
+
+def JSONHash(jsonString):
+    data = jsonString.encode()
+    hashed = hashlib.sha256(data).hexdigest()
+    return hashed

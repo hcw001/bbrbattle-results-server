@@ -116,7 +116,7 @@ class Battle:
         self.defender.nextRound()
         self.rounds += 1
         if self.rounds > 100:
-            raise AssertionError("Infinite Run.")
+            raise AssertionError(f"Infinite Run <{self.rounds}>")
         
     def rollCombat(self):
         attackerHits = Dice.roll(*self.attacker.getDice())

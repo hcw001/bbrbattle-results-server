@@ -133,7 +133,7 @@ class Player:
         else: return Stalemate.NONE
     def nextRound(self):
         self.isFirstRound = False
-    def rollTargetStrikes(self, assignments, unit):
+    def rollTargetStrikes(self, assignments, strikeUnit):
         #assignments: <[unit: string]: number[]>
         usedCount = 0
         hits = []
@@ -142,7 +142,7 @@ class Player:
             for target in assignments[unit]:
                 #Tags take individual unit names
                 usedCount += target
-                strikes = Dice.roll(self.get(unit).getDice()*target, [unit] * target)
+                strikes = Dice.roll(self.get(strikeUnit).getDice()*target, [unit] * target)
                 if len(strikes) > 0:
                     #Handle Capital Ships
                     hits.append([strikes[0]])
@@ -181,6 +181,19 @@ class Player:
                     for targetIdx in range(len(assignments[unit])):
                         if subCount > 0:
                             assignments[unit][targetIdx] += 1
+                            subCount -= 1
+                        else:
+                            break
+        #No Units Left -> Target Subs
+        if subCount > 0:
+            assert len(assignments) == 0
+            tptCount = opponent.count(Abbr.TPT)
+            if tptCount > 0:
+                assignments[Abbr.TPT] = [0]*tptCount
+                while subCount > 0:
+                    for targetIdx in range(tptCount):
+                        if subCount > 0:
+                            assignments[Abbr.TPT][targetIdx] += 1
                             subCount -= 1
                         else:
                             break
