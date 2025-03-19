@@ -36,6 +36,7 @@ def logError(battle_id):
         cursor.close()
         connection.close()
     except Exception as e:
+        print("Log Error Failed.")
         return
 
 def logOutputs(battle_id, outputs):
@@ -48,4 +49,17 @@ def logOutputs(battle_id, outputs):
         cursor.close()
         connection.close()
     except Exception as e:
+        print("Log Outputs Failed.")
         return
+    
+def logUserRequest(battle_id, request):
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO users (battle_id, user_ip, user_agent, user_referer) VALUES (%s, %s, %s, %s)", (battle_id, request.remote_addr, request.headers.get('User-Agent'), request.headers.get('Referer')))
+        connection.commit()
+        connection.close()
+    except Exception as e:
+        print("Log User Failed")
+        return
+    
