@@ -94,7 +94,7 @@ For each contested space, repeat steps 2–6 each round until termination:
 
 1. **Place units on the Battle Board.** Attacker side and defender side. Cargo (units on transports, guest air on carriers) is placed beside its carrier and does not roll or take hits — it dies with its carrier.
    - **Allied units already in the contested space do NOT join the battle.** If you attack into a sea zone that already contains friendly (allied) units, your ally's units are not placed on the Battle Board and remain out of play. They do not fire, take hits, or affect combat resolution.
-2. **Target Select / Surprise Strike / Submerge** — submarines and attacking tactical bombers act *before* normal combat rolls. Casualties from step 2 are removed immediately and do **not** fire in steps 3 or 4.
+2. **Target Select / Surprise Strike / Submerge** — submarines and attacking tactical bombers act *before* normal combat rolls. Within step 2: (a) attacker rolls Target Select dice and marks casualties; (b) defender rolls Surprise Strike dice and attacker picks those casualties; (c) all step-2 casualties are removed. A unit marked as a step-2 casualty in (a) still rolls if it has a step-2 action in (b). Step-2 casualties do **not** fire in steps 3 or 4.
 3. **Attacking units fire.** Roll one die per attacking unit that did not act in step 2. Defender places hits behind casualty strip.
 4. **Defending units fire.** Roll one die per defending unit (including those behind casualty strip) that did not act in step 2. Attacker removes casualties immediately.
 5. **Remove defender's casualties** (from the casualty strip).
@@ -103,16 +103,18 @@ For each contested space, repeat steps 2–6 each round until termination:
 
 ### 4.1 Step 2 — Submarines
 
-**Trigger:** A submarine is in the battle AND no enemy destroyer is in the same battle.
+**Trigger:** Attacking subs may act in step 2 only if **no defending destroyer** is in the battle. Defending subs may act in step 2 only if **no attacking destroyer** is in the battle.
 
 - **Attacking subs** may: Target Select OR Submerge.
 - **Defending subs** may: Surprise Strike OR Submerge.
 - Decision is made **before any dice are rolled**. **Attacker decides first.**
 - **Submerge**: remove from Battle Board, place back in sea zone with a "Submerged" marker. Remains submerged until the controlling player's next turn. Cannot fire or take hits this combat. Cannot conduct convoy or lend-lease disruption while submerged.
 - **Attacking sub Target Select**: The attacker **declares a specific target unit for each participating submarine before rolling** (any naval unit including transports). Roll d6. Hit on `≤2` (or `≤3` with Super Submarines). On a hit, the declared target is **immediately removed** — it does not fire in steps 3 or 4. On a miss, nothing happens. **If multiple subs declared the same target and that target is already removed when a later die resolves, the hit is lost — not reassigned.**
-- **Defending sub Surprise Strike**: The defender **declares a specific target unit before rolling** (any non-air naval unit; transports chosen last). Roll d6. Hit on `≤1` (defense value 1). On a hit, the declared target is **immediately removed** — it does not fire in steps 3 or 4. On a miss, nothing happens. **If multiple defending subs declared the same target and that target is already removed when a later die resolves, the hit is lost — not reassigned.**
+- **Defending sub Surprise Strike**: Roll d6. Hit on `≤1` (defense value 1). The **attacker chooses the casualty** from their own units; it is **immediately removed** — it does not fire in steps 3 or 4.
 
-**If an enemy destroyer is in the battle:** subs cannot Target Select, Surprise Strike, or Submerge. They fire in steps 3/4 with their normal A/D.
+**Step 2 internal sequence:** (1) Attacker declares all Target Select targets. (2) Attacker rolls Target Select dice — mark casualties, do not remove yet. (3) Defender rolls Surprise Strike dice — attacker picks those casualties. (4) All step-2 casualties are removed. A defending sub marked as a Target Select casualty in step (2) still rolls its Surprise Strike die in step (3).
+
+**If a defending destroyer is in the battle:** attacking subs cannot Target Select or Submerge — they fire in steps 3/4 with normal attack value. **If an attacking destroyer is in the battle:** defending subs cannot Surprise Strike or Submerge — they fire in steps 3/4 with normal defense value.
 
 **Subs that fired in step 2 cannot fire again in steps 3/4 the same round.**
 
@@ -125,7 +127,7 @@ For each contested space, repeat steps 2–6 each round until termination:
 - Target Select roll: hit on `≤3` (no Combined Arms bonus permitted). On a hit, the declared target is **immediately removed** — it does not fire in steps 3 or 4. On a miss, nothing happens.
 - **If multiple tac bombers declared the same target and that target is already removed when a later die resolves, the hit is lost — not reassigned.**
 - **AAA fire (if any) negates Target Select** — if the AAA step happens, no Target Select.
-- **Battleship/Cruiser built-in AAA also negates Target Select** for naval Target Select use.
+- **Battleship/Cruiser built-in AAA also negates tac bomber Target Select.** Submarine Target Select is unaffected by AAA.
 - Target Select for tac bombers is **first round only**. From round 2, they fire normally in step 3.
 - A tac bomber that used Target Select **loses Combined Arms for the entire battle**.
 
@@ -276,8 +278,8 @@ Fighters and tactical bombers in a territory with an operative air base may scra
 - **Treat Hostile Sea Zones as Friendly**: subs ignore enemy units when moving (unless an enemy destroyer is present, which forces stop).
 - **Does Not Block Enemy Movement**: a sea zone with ONLY enemy subs does not stop a non-sub unit's movement. Entering a sub-only sea zone, the moving player may choose to attack or not.
 - **Cannot hit / be hit by air units** unless a friendly destroyer is in the battle.
-- All special abilities (Target Select, Surprise Strike, Submerge, stealth, air-immunity) are **cancelled by an enemy destroyer in the same battle**.
-- Defending destroyers belonging to a power *friendly to the attacker but not in the battle* do NOT cancel sub abilities.
+- All special abilities (Target Select, Surprise Strike, Submerge, stealth, air-immunity) are **cancelled by an opposing-side destroyer in the same battle**: a defending destroyer cancels attacking subs' abilities; an attacking destroyer cancels defending subs' abilities.
+- Destroyers belonging to a power *friendly to the attacker but not in the battle* do NOT cancel sub abilities.
 
 ### 6.4 Transports — Full Behavior Summary
 
@@ -451,8 +453,9 @@ For each turn:
 For each General Combat round (a single contested space):
   1. Place units on Battle Board (adjust capital ship damage states now)
   2. Special Step:
-       - Subs: Target Select (att) / Surprise Strike (def) / Submerge — only if no enemy destroyer
-           - Target Select, Surprise Strike: declare specific target before rolling; on miss nothing happens; excess hits on a destroyed target are lost, not reassigned
+       - Subs: Target Select (att) / Surprise Strike (def) / Submerge — defending destroyer negates att subs; attacking destroyer negates def subs
+           - Target Select: attacker declares specific target before rolling; on miss nothing happens; excess hits on a destroyed target are lost, not reassigned
+           - Surprise Strike: no pre-declaration; sub rolls, attacker picks casualty from their own units; casualty immediately removed
        - Att Tac Bombers: optional Target Select (round 1 only); negated by any AAA fire; declare specific target before rolling; excess hits lost, not reassigned
        - AAA / built-in AAA fires (before round 1 ONLY, vs attacking air units)
        - Apply step-2 casualties immediately
@@ -479,8 +482,9 @@ For each General Combat round (a single contested space):
 - **Step 2 (subs) repeats per round; step 2 (tac bombers) does NOT repeat (round 1 only).**
 - **Submerged subs**: stay in the sea zone with a marker; surface at owner's next turn (Repair Units phase). They cannot disrupt convoy/lend-lease while submerged.
 - **Subs that submerged before any dice were rolled** are NOT casualties and are NOT removed from play — they're set aside until the controller's next turn.
-- **Attacking sub Target Select is the ONLY scenario where a transport is a valid first-choice target** despite "transport chosen last" — defending subs using Surprise Strike also pre-declare their target (defender's choice), but the transport-last rule still applies.
-- **Target Select and Surprise Strikes are pre-declared, not a post-roll casualty pick.** The player (attacker in case of Target Select; defender for Surprise Strikes) names the specific target unit before any die is rolled. If the declared target is already gone when a later die resolves (e.g. two subs both named the same cruiser and the first hit killed it), the second hit is lost — it is NOT reassigned to another unit.
+- **Attacking sub Target Selects a defending sub that is Surprise Striking**: both roll. Target Select dice resolve first (step 2a) — if the defending sub is hit it is marked but not yet removed. The defending sub then rolls its Surprise Strike die (step 2b). All step-2 casualties are removed together after both phases resolve.
+- **Attacking sub Target Select is the ONLY scenario where a transport is a valid first-choice target** despite "transport chosen last" — defending subs doing Surprise Strike still hit per attacker's casualty choice (normal rules).
+- **Target Select is pre-declared, not a post-roll casualty pick.** The attacker names the specific target unit before any die is rolled. If the declared target is already gone when a later die resolves (e.g. two subs both named the same destroyer and the first hit killed it), the second hit is lost — it is NOT reassigned to another unit. Surprise Strike has no pre-declaration; the attacker picks the casualty reactively after the roll.
 - **Auto-destroyed defenseless transports**: only triggers if attacker has at least one unit that can fight >1 round AND the only defenders are transports. Strategic bombers (1-round-only) do NOT count for this trigger.
 - **Lone transports / sub-only sea zones**: don't block movement. But a sea unit that "auto-destroys" a lone transport must commit to a sea-combat resolution (one round) and then can no longer freely pass.
 - **Air units in amphibious assaults**: lock their pre-declared assignment (sea OR land), and they all land in Noncombat Move.
@@ -546,12 +550,12 @@ Items where the source rulebook is unclear, contradictory, or contains implement
    - Strategic bomber (normal): 1d6+2 per bomber → 3-8 damage per bomber.
    - Strategic bomber (Heavy Bombers tech): 2d6+2 each die (sum) per bomber → 6-16 damage per bomber. (Each die individually gets +2 then summed.)
 
-9. **Submarine "Strike" terminology.** The source uses "Strike" and "Surprise Strike" for defending submarine attacks in step 2. "Target Select" is reserved for attacking submarines (and attacking tac bombers). Both mechanics involve the **firing side pre-declaring a specific target before rolling** — the attacker for Target Select, the defender for Surprise Strike. The key difference is targeting restrictions: Target Select can pick any naval unit including transports (first choice); Surprise Strike follows the transport-last rule.
+9. **Submarine "Strike" terminology.** The source uses "Strike" and "Surprise Strike" for defending submarine attacks in step 2. "Target Select" is reserved for attacking submarines (and attacking tac bombers). They are functionally different: Target Select is **pre-declared** (the firer names a specific target before rolling; a miss wastes the shot; excess hits on the same target are lost); Surprise Strike has **no pre-declaration** (the sub rolls and the **attacker picks the casualty** from their own units, exactly like normal casualty selection, but applied immediately).
 
 10. **Attacking sub Target Select can pick a transport.** This is the single exception to the "transports chosen last" rule. Other targeting (including air units hitting non-sub targets) still follows the "transport chosen last" rule.
 
-13. **Target Selects and Surprise Strikes are a pre-declared commits, not a post-roll casualty pick.** For attacking submarines and attacking tactical bombers target selecting, and defending submarines surprise striking, the player names the specific target unit *before* any dice are rolled for that step. Consequence: if two subs both declare the same target and the first hit destroys it, the second hit is wasted — it cannot be redirected to another unit.
+11. **Target Select is a pre-declared commit, not a post-roll casualty pick.** For attacking submarines and attacking tactical bombers, the attacker names the specific target unit *before* any dice are rolled for that step. Consequence: if two units both declare the same target and the first hit destroys it, the second hit is wasted — it cannot be redirected to another unit. Surprise Strike does not work this way — it is a roll-then-casualty-pick mechanic where the attacker chooses which of their own units absorbs the hit.
 
-11. **Air units in an amphibious assault**: must be pre-declared as sea-combat OR land-combat assigned. The source does not say this assignment occurs before the attacker sees the defender's scramble decision, but it does say scrambling happens AFTER the attacker assigns its air. So the sequence is: attacker announces amphibious assault → attacker assigns each attacking air unit to sea or land → defender declares scrambles → resolve.
+12. **Air units in an amphibious assault**: must be pre-declared as sea-combat OR land-combat assigned. The source does not say this assignment occurs before the attacker sees the defender's scramble decision, but it does say scrambling happens AFTER the attacker assigns its air. So the sequence is: attacker announces amphibious assault → attacker assigns each attacking air unit to sea or land → defender declares scrambles → resolve.
 
-12. **Carrier "must move to land otherwise-stranded planes" rule** only applies if the carrier did not combat-move and did not participate in combat. A carrier already used in combat is not obligated.
+13. **Carrier "must move to land otherwise-stranded planes" rule** only applies if the carrier did not combat-move and did not participate in combat. A carrier already used in combat is not obligated.
