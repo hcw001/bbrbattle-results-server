@@ -170,92 +170,9 @@ Combat ends when either of these is true (checked in order):
 
 ---
 
-## 5. Special Combat Types
+## 5. Special Rules & Edge Cases
 
-### 5.1 Strategic and Tactical Bombing Raids
-
-Direct attacks on **facilities** (Industrial Complex, Air Base, Naval Base). Tactical bombers may NOT attack industrial complexes — only air/naval bases. Strategic and heavy bombers may attack all three. A territory's IC and bases may be bombed in the same raid.
-
-**Participants:**
-- Attacker: strategic bombers, heavy bombers (tech), tactical bombers (air/naval bases only). May bring fighter **escorts** from any territory/sea zone (range permitting).
-  - **Escorts are locked**: once declared, an escort cannot participate in any other battle that turn, including any other battle in the target territory, **regardless of whether interceptors are declared**.
-- Defender: any number of **fighters based in the bombed territory** may declare as **interceptors**. Decision is made after attacker's Combat Move, before Conduct Combat. Strategic bombers cannot intercept.
-  - **Interceptors are locked**: declared interceptors cannot participate in any other battle that turn (including a battle in the same territory). They must remain in their original territory after the air battle.
-
-**Multi-target raids:** If a territory has more than one target (e.g. an IC plus a naval base), the attacker **divides bombers into groups, assigning each group to a specific facility**. Tactical bombers cannot be assigned to industrial complexes.
-
-**Sequence:**
-1. **Air battle (if interceptors declared, 1 round only)**:
-   - Participants: attacking bombers + escort fighters vs defending interceptor fighters.
-   - **All air units roll at A=1 and D=1 in this air battle** (overrides normal values).
-   - Standard simultaneous fire, one round.
-   - Surviving escorts are considered retreated — they do not face AAA and do not participate further, but they remain in the territory until Noncombat Move. They are NOT subject to AAA from the targeted facility.
-   - Surviving interceptors stay in the territory; if territory is captured later, they may move one space to a friendly territory or carrier, otherwise lost.
-2. **Facility AAA fire**: each targeted facility rolls **one die per bomber directly attacking that specific facility** at hit on `≤1`. Hits are bombers (attacker chooses which). Each facility's AAA fires independently, only against bombers assigned to it.
-   - **Note**: AAA *units* in the territory do NOT fire at bombing raids — only facility AAA does. AAA units protect combat units in general combat instead.
-3. **Bombing damage**:
-   - Each surviving bomber rolls 1d6 (heavy bombers roll **2 dice**).
-   - **Strategic/heavy bombers**: add `+2` to each die for damage.
-   - **Tactical bombers**: do **not** add +2.
-   - Total damage = sum of (modified) dice. Place damage chips under target up to its cap.
-
-**Facility Damage Caps:**
-
-| Facility | Tactical | Strategic | Heavy |
-|---|---|---|---|
-| Minor Industrial | 0 (cannot bomb) | 10 | 15 |
-| Major Industrial | 0 (cannot bomb) | 20 | 25 |
-| Air Base | 6 | 10 | 15 |
-| Naval Base | 6 | 10 | 15 |
-
-Damage beyond cap is not applied. Damage is repaired in the controller's Purchase and Repair phase (cost = 1 IPC per damage point).
-
-**A bomber that conducts a bombing raid cannot participate in any other combat that turn** and retreats during Noncombat Move.
-
-### 5.2 Naval Blockades
-
-Resolved before Amphibious Assaults. Uses standard General Combat rules.
-
-### 5.3 Amphibious Assaults
-
-Order within each assault:
-
-**Step 1 — Sea Combat (if any defending surface warships and/or scrambled air units):**
-- Standard General Combat in the sea zone.
-- If the defender has only subs and/or transports, attacker may choose to ignore them or fight.
-- Attacking the subs/transports here **disqualifies** the attacking battleships/cruisers used from bombarding in step 2.
-
-**Step 2 — Battleship & Cruiser Bombardment:**
-- Only battleships/cruisers that did **not** participate in the sea combat may bombard.
-- One battleship or cruiser may bombard for **each land unit being offloaded from transports** in that coastal territory. The number of bombardment dice may not exceed the number of offloading units.
-- Multiple territories assaulted? Split bombarding ships as desired, respecting the per-target unit cap.
-- Battleship bombardment: hit on `≤4`. Cruiser bombardment: hit on `≤3`.
-- **Damaged battleships cannot bombard.**
-- Hits go behind the defender's casualty strip — the hit units **still defend in step 3** before being removed.
-- Each battleship/cruiser bombards only one territory per turn.
-
-**Step 3 — Land Combat:**
-- After sea is clear (or transports/submerged subs only remain) and at least one attacking land unit committed, move all attacking + defending land/air to battle strip.
-- Standard General Combat.
-- **Seaborne (offloaded) land units cannot retreat.** Overland units and air units may retreat together as a group between rounds (overland to one originating space; air units retreat per air retreat rules and land in Noncombat).
-- If no land/air attackers survive, assault ends.
-- If no land units survived sea combat (or all sea attackers retreated), other designated land/air attackers must still fight **one round of land combat** before being allowed to retreat.
-
-**Air units in amphibious assaults:**
-- Each attacking air unit must be **pre-declared** as assigned to either the sea combat OR the land combat. Cannot do both. Cannot change.
-- Scrambled defending air units are placed after the assault is announced and the attacker's air assignments are declared.
-- Defending air based in territory cannot participate in the sea combat (exception: scrambled fighters/tac bombers from an operative air base on a coastal/island territory may scramble into the adjacent sea zone).
-- Strategic bombers cannot scramble.
-- After the assault, all attacking air units stay in place until Noncombat Move (then land).
-
-### 5.4 Scramble (Air Base ability)
-Fighters and tactical bombers in a territory with an operative air base may scramble to defend an **adjacent sea zone** when it is attacked. Base ability: up to 3 scrambling air units (max 3, up to 3 may be allied). With **Radar and A.T.C.** tech, this becomes up to 6 (still up to 3 allied).
-
----
-
-## 6. Special Rules & Edge Cases
-
-### 6.1 AAA Units (in normal combat, not bombing)
+### 5.1 AAA Units (in normal combat, not bombing)
 
 - AAA fires **once, before round 1** of combat in the territory it's in, when **attacked by air units**.
 - **Shots = min(3 × number of AAA units, number of attacking air units).** Each attacking air unit can be fired upon at most once.
@@ -263,7 +180,7 @@ Fighters and tactical bombers in a territory with an operative air base may scra
 - Hits are removed immediately and do not participate further in the battle. Attacker picks which air units die.
 - **AAA cannot fire in defending units fire step** (A=0, D=1 only counts for being a casualty in normal combat — it's a "free hit absorber").
 
-### 6.2 Battleship & Cruiser Built-in AAA
+### 5.2 Battleship & Cruiser Built-in AAA
 
 - Same mechanic as AAA units, but per-ship:
   - Battleship: **up to 3 shots** per battleship (max = min(3 × #BB, #attacking air)). Hit on `≤1`.
@@ -273,7 +190,7 @@ Fighters and tactical bombers in a territory with an operative air base may scra
 - **Damaged battleships cannot fire AAA.**
 - **This AAA negates Target Select** by tactical bombers.
 
-### 6.3 Submarines — Full Behavior Summary
+### 5.3 Submarines — Full Behavior Summary
 
 - **Treat Hostile Sea Zones as Friendly**: subs ignore enemy units when moving (unless an enemy destroyer is present, which forces stop).
 - **Does Not Block Enemy Movement**: a sea zone with ONLY enemy subs does not stop a non-sub unit's movement. Entering a sub-only sea zone, the moving player may choose to attack or not.
@@ -281,7 +198,7 @@ Fighters and tactical bombers in a territory with an operative air base may scra
 - All special abilities (Target Select, Surprise Strike, Submerge, stealth, air-immunity) are **cancelled by an opposing-side destroyer in the same battle**: a defending destroyer cancels attacking subs' abilities; an attacking destroyer cancels defending subs' abilities.
 - Destroyers belonging to a power *friendly to the attacker but not in the battle* do NOT cancel sub abilities.
 
-### 6.4 Transports — Full Behavior Summary
+### 5.4 Transports — Full Behavior Summary
 
 - A=0, D=0, no combat value. Cannot fire in combat steps. Can be killed.
 - **Cannot attack alone** (must be accompanied by an attack-valued unit) — exception: amphibious assault from a friendly sea zone clear of enemy subs.
@@ -301,13 +218,13 @@ Fighters and tactical bombers in a territory with an operative air base may scra
   - "Bridging" allowed: load and offload in same sea zone without moving.
   - Friendly powers' units must load on their controller's turn, ride on transport owner's turn, offload on a later controller turn.
 
-### 6.5 Destroyer (Anti-Sub)
+### 5.5 Destroyer (Anti-Sub)
 
 - Cancels **Treat Hostile Sea Zones as Friendly**: an enemy sub entering a sea zone with a destroyer must stop movement. Combat may ensue.
-- When in a battle, cancels enemy submarines': **Target Select, Surprise Strike, Submersible, and air-immunity**. (Super Submarines partially override — see §7.)
+- When in a battle, cancels enemy submarines': **Target Select, Surprise Strike, Submersible, and air-immunity**. (Super Submarines partially override — see §6.)
 - Destroyers from a power friendly to attacker but NOT in the battle do not enable these effects.
 
-### 6.6 Fighters & Tactical Bombers — Carrier Operations
+### 5.6 Fighters & Tactical Bombers — Carrier Operations
 
 - Both can land on/take off from carriers.
 - Carrier base capacity: 2 air units. With **Super Carriers** tech: 3.
@@ -323,14 +240,14 @@ Fighters and tactical bombers in a territory with an operative air base may scra
   3. Move 1 space to a friendly carrier or friendly territory.
   4. Otherwise, be destroyed.
 
-### 6.7 Air Unit Landing & Range Rules
+### 5.7 Air Unit Landing & Range Rules
 
 - Air units cannot land in territories captured this turn, or territories converted from friendly neutrals this turn.
 - Each sea-zone or territory crossing = 1 movement point.
 - **During Combat Move, you must be able to demonstrate a plausible landing path for every attacking air unit** (combat moves, planned noncombat moves, carrier mobilizations). After demonstrating this, you have no guarantee — battle losses may strand planes (they die at end of Noncombat).
 - If you declared a carrier would noncombat-move to receive a plane, you must follow through (unless the plane is already landed safely or destroyed, or a clearing combat failed).
 
-### 6.8 Strategic Bomber Air Transport (Reclassification)
+### 5.8 Strategic Bomber Air Transport (Reclassification)
 At Combat Move or Noncombat Move, a strategic or heavy bomber may be reclassified:
 
 | Reclassified Unit | Move | Attack | Defense | Capacity |
@@ -347,29 +264,29 @@ At Combat Move or Noncombat Move, a strategic or heavy bomber may be reclassifie
 
 ---
 
-## 7. Research & Technology Effects
+## 6. Research & Technology Effects
 
 Tech is per-nation, 4 IPCs to start at Phase 1, progresses through P1 → P2 → P3 → Hold. Only one tech in development at a time. Cancelling forfeits all IPCs spent. 11 techs available.
 
 Below is how each tech mutates combat-relevant behavior:
 
-### 7.1 Advanced Mechanized (Mech Infantry tech)
+### 6.1 Advanced Mechanized (Mech Infantry tech)
 - Mech Infantry may carry 2 infantry **or** tow 1 artillery during movement phases.
 - Mech Infantry can **blitz without a tank**.
 - Loaded mech infantry count as 1 unit when railing from an IC.
 - **Cannot** load carried/towed units onto a transport.
 
-### 7.2 Self-Propelled Artillery (Artillery tech)
+### 6.2 Self-Propelled Artillery (Artillery tech)
 - Artillery supports **2** infantry/mech infantry (instead of 1) per artillery unit for the A=2 buff.
 - Artillery movement: **2** (up from 1).
 - Artillery may blitz with a tank originating in the same territory.
 
-### 7.3 Improved Transports
+### 6.3 Improved Transports
 - Transport capacity: **3 ground units** (was 2). If carrying 3, **at least 1 must be infantry**.
 - Transports now **defend at 1**.
 - A lone Improved Transport is still ignored (does not block movement on its own).
 
-### 7.4 Super Battleships
+### 6.4 Super Battleships
 - Battleship rolls **2 dice on attack/defense**: one at hit-on-≤4, one at hit-on-≤2. **Applies to shore bombardment too** (so super-BB bombardment rolls 2 dice: one ≤4 and one ≤2).
 - Battleships: **damage capacity 3** (3 hits to destroy); still fully operational at 1 hit (only the second & third hits represent damage states; rules say "considered fully operational with 1 hit").
 - **AAA defend at 2 (up from 1)** — this line is bundled with Super Battleships in the source rules. It is ambiguous whether this refers to:
@@ -377,39 +294,39 @@ Below is how each tech mutates combat-relevant behavior:
   - (b) AAA unit's *defense value* (used when taken as a casualty) going from 1 to 2.
   - **Implementation note**: the most common interpretation, given Radar's parallel wording ("AAA Artillery units and Facility fire is increased to 2"), is interpretation (a). Treat AAA-fire hits as `≤2` when *either* tech is held. The defending-step defense value of AAA (D=1) is unchanged.
 
-### 7.5 Super Submarines
+### 6.5 Super Submarines
 - Submarine attack: **3** (up from 2). Target Select hit on `≤3`.
 - Destroyers detect only **3 submarines each** — i.e., a single destroyer cancels the special abilities (Target Select, Surprise Strike, Submerge) of only 3 enemy super-subs. Subs in the battle beyond that detection cap may still submerge, Strike, or Target Select normally.
 - **Implementation:** count `cap = 3 × (number of enemy destroyers in the battle)`; cancel sub abilities for `min(cap, number of subs)` subs; the remainder retain full sub abilities.
 
-### 7.6 Heavy Bombers
+### 6.6 Heavy Bombers
 - Strategic bombers on attack: **2 dice at hit-on-≤3** (was 2@2).
 - Strategic bombing raid roll: **2 dice** (sum + 2 per die for damage).
-- Bombers may be reclassified as **cargo plane** (heavy only) — see §6.8.
+- Bombers may be reclassified as **cargo plane** (heavy only) — see §5.8.
 
-### 7.7 Jet Fighters
+### 6.7 Jet Fighters
 - Fighter attack: **4** (up from 3).
 - Fighter escort/intercept value: **2** (up from 1) in the special bombing-raid air battle.
 
-### 7.8 Super Carriers
+### 6.8 Super Carriers
 - Carrier capacity: **3 air units** (up from 2).
 - Carrier damage capacity: **3 hits** (still considered fully operational at 1 hit).
 
-### 7.9 Improved Shipyards
+### 6.9 Improved Shipyards
 - Naval costs reduced: Submarine 5, Transport 5, Destroyer 7, Cruiser 10, Carrier 13, Battleship 16.
 - Minor industrial complexes may now build capital ships.
 
-### 7.10 Heavy Tanks
+### 6.10 Heavy Tanks
 - Tank attack: **4** (up from 3).
 
-### 7.11 Radar and A.T.C.
+### 6.11 Radar and A.T.C.
 - AAA units AND facility AAA fire: hit on `≤2` (up from `≤1`).
 - Air bases scramble up to **6** (up to 3 may be allied), up from 3.
 - Air base movement bonus: **+2** to air movement, up from +1.
 
 ---
 
-## 8. Combat-Time Targeting & Casualty Restrictions
+## 7. Combat-Time Targeting & Casualty Restrictions
 
 Quick-reference for who can hit whom and casualty allocation:
 
@@ -427,7 +344,7 @@ Quick-reference for who can hit whom and casualty allocation:
 
 ---
 
-## 9. Sequence Cheat-Sheet (For Implementation)
+## 8. Sequence Cheat-Sheet (For Implementation)
 
 ```
 For each turn:
@@ -470,7 +387,7 @@ For each General Combat round (a single contested space):
 
 ---
 
-## 10. Edge Cases & Implementation Gotchas
+## 9. Edge Cases & Implementation Gotchas
 
 - **Allied units in the contested sea zone do not fight.** If you attack into a sea zone that already contains friendly allied units, those units are NOT placed on the Battle Board — they take no hits and fire no shots. They stay on the map, out of play, for the duration of that battle.
 - **Submarines and transports are "invisible" for sea-zone status checks.** When determining whether a sea zone is "hostile" (for movement, loading/offloading, retreat destinations), enemy subs and transports are ignored. A sea zone with only enemy subs and/or transports is treated as friendly for movement/loading purposes.
@@ -503,7 +420,7 @@ For each General Combat round (a single contested space):
 
 ---
 
-## 11. Unit Quick-Reference Card
+## 10. Unit Quick-Reference Card
 
 | Unit | Cost | A | D | M | HP | Notes |
 |---|---|---|---|---|---|---|
@@ -527,11 +444,11 @@ For each General Combat round (a single contested space):
 
 ---
 
-## 12. Source Ambiguities & Interpretation Notes
+## 11. Source Ambiguities & Interpretation Notes
 
 Items where the source rulebook is unclear, contradictory, or contains implementation-critical nuances worth flagging:
 
-1. **AAA defense value vs AAA fire die under Super Battleships tech.** Source says "AAA defend at 2 up from 1" bundled with Super BBs, but AAA's listed tech upgrade is Radar and A.T.C. The most consistent reading is that both techs independently raise AAA *fire* hit-on-die to `≤2`. AAA's casualty-step defense value (D=1) should be treated as unchanged. (See §7.4.)
+1. **AAA defense value vs AAA fire die under Super Battleships tech.** Source says "AAA defend at 2 up from 1" bundled with Super BBs, but AAA's listed tech upgrade is Radar and A.T.C. The most consistent reading is that both techs independently raise AAA *fire* hit-on-die to `≤2`. AAA's casualty-step defense value (D=1) should be treated as unchanged. (See §6.4.)
 
 2. **"Damaged capital ship attacks/moves at 50% capacity, rounded down."** The source says "50% capacity" and gives a battleship example (4 → 2). Implementation should floor-divide attack/move values by 2. Defense is explicitly unchanged. For a damaged super-battleship (2 dice, ≤4 and ≤2), halving each die produces ≤2 and ≤1.
 
