@@ -7,7 +7,6 @@ BLOCKED = [re.compile(p) for p in [
     r"(^|/)docs/combat/(special_types|source)\.md$",
 ]]
 
-COMPILED = [re.compile(p) for p in BLOCKED_PATTERNS]
 def is_blocked(s: str) -> bool:
     try:
         resolved = str(Path(s).resolve())

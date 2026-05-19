@@ -2,9 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What This Is
+# What This Is
 
-A Flask API server that runs Monte Carlo battle simulations for a board game (bbr40.com). The single endpoint accepts two armies and returns a probability distribution over all possible outcomes after running 20,000 simulated battles.
+The project is a battle simulator for a board game. It provides a robust API for simulating combat in the board game.
 
 ## Commands
 
@@ -22,9 +22,7 @@ gunicorn main:app
 python -m test.test
 ```
 
-`.env` must be populated with PostgreSQL credentials (`user`, `password`, `host`, `port`, `dbname`) and a `version` string before the server will log results.
-
-## Architecture
+## Current Architecture
 
 Request flow: `main.py` → `Simulation` → `Battle` (×20,000) → `Attacker`/`Defender` → `Unit` subclasses
 
