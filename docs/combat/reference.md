@@ -18,10 +18,11 @@ Combat occurs in **territories** (land) or **sea zones** (naval).
 ### 1.3 Capital Ships & Damage
 - **Capital ships** = Battleships and Aircraft Carriers. They have **damage capacity 2** (require 2 hits to destroy).
 - A damaged capital ship (1 hit applied) **attacks, defends, and moves at 50% capacity**, rounded down. Example: a damaged battleship attacks/defends at `2` (and moves `1`) instead of `4` (and `2`); a damaged carrier defends at `1` (and moves `1`) instead of `2` (and `2`). (A=0 for carriers is unchanged.)
-- **Timing carve-out for defense:** an already-damaged capital ship defends at halved value from the start of the round. An undamaged capital ship that takes its first hit during main combat (steps 3–4) still returns fire at full defense that round — the damage penalty applies from the next round onward.
+- **Timing carve-out for defense:** an already-damaged capital ship defends at halved value from the start of the round. An undamaged capital ship that takes hit(s) during main combat (steps 3–4) still returns fire at full defense that round — the damage penalty applies from the next round onward.
 - Damage state is re-evaluated at the **start of each combat round** and also **immediately after step 2** if the capital ship was struck by a Target Select or Surprise Strike during that step (so a capital ship first-hit in step 2 defends at halved value when main combat fires in steps 3–4).
 - A damaged capital ship **loses its built-in AAA** and **cannot shore bombard**.
 - A single hit on an undamaged capital ship places a damage chip — the unit is **not** moved behind the casualty strip and is **not** destroyed.
+- When a capital ship absorbs its **final hit** (reaching max HP), it is placed behind the casualty strip and removed after step 4 — same as any other unit. It returns fire in step 4 using the stats it held at the **start of step 3** that round (not post-hit values) and still contributes to combined arms in step 4 — pairings are evaluated at time of firing, and the unit is present on the strip. If the killing blow came in step 2, the capital ship is removed immediately, does **not** fire in steps 3–4, and cannot contribute to combined arms for the rest of that round (e.g., a battleship killed in step 2 can no longer pair with a cruiser in steps 3–4; but the cruiser may still pair with any other battleship that is present).
 
 ---
 
@@ -71,7 +72,7 @@ Legend: A = Attack, D = Defense, M = Movement, HP = Damage Capacity, Cost = IPCs
 
 ## 3. Combined Arms ("Bloodbath" Chart)
 
-Pairings are **1:1** and active only as specified (most are attack-only buffs). A given unit can only be paired with **one** other unit per combat round.
+Pairings are active only as specified in the table below. Most are 1:1; Self-Propelled Artillery tech changes the artillery buff to 1:2; the destroyer effect applies to all applicable units in the battle. **Pairings are re-evaluated at each time of firing — step 3 (attackers) and step 4 (defenders) independently. Units behind the casualty strip count for combined arms when they fire.**
 
 | Pairing (1:1) | Effect | When Active |
 |---|---|---|
@@ -109,9 +110,9 @@ For each contested space, repeat steps 2–6 each round until termination:
 - **Attacking subs** may: Target Select OR Submerge.
 - **Defending subs** may: Surprise Strike OR Submerge.
 - Decision is made **before any dice are rolled**. **Attacker decides first.**
-- **Submerge**: remove from Battle Board, place back in sea zone with a "Submerged" marker. Remains submerged until the controlling player's next turn. Cannot fire or take hits this combat. Cannot conduct convoy or lend-lease disruption while submerged.
-- **Attacking sub Target Select**: The attacker **declares a specific target unit for each participating submarine before rolling** (any naval unit including transports). Roll d6. Hit on `≤2` (or `≤3` with Super Submarines). On a hit, the declared target is **immediately removed** — it does not fire in steps 3 or 4. On a miss, nothing happens. **If multiple subs declared the same target and that target is already removed when a later die resolves, the hit is lost — not reassigned.**
-- **Defending sub Surprise Strike**: Roll d6. Hit on `≤1` (defense value 1). The **attacker chooses the casualty** from their own units; it is **immediately removed** — it does not fire in steps 3 or 4.
+- **Submerge**: remove from Battle Board, place back in sea zone with a "Submerged" marker. Remains submerged until the controlling player's next turn. Cannot fire or take hits this combat.
+- **Attacking sub Target Select**: The attacker **declares a specific target unit for each participating submarine before rolling** (any naval unit including transports). Each sub independently chooses its own target — multiple subs may all declare the same unit, or each may declare a different valid unit. Roll d6. Hit on `≤2` (or `≤3` with Super Submarines). On a hit, the declared target is **immediately removed following step 2** (see *Step 2 internal sequence*) — it does not fire in steps 3 or 4. On a miss, nothing happens. **If multiple subs declared the same target and that target is already removed when a later die resolves, the hit is lost — not reassigned.**
+- **Defending sub Surprise Strike**: Roll d6. Hit on `≤1` (defense value 1). The **attacker chooses the casualty** from their own units; it is **immediately removed following step 2** (see *Step 2 internal sequence*) — it does not fire in steps 3 or 4.
 
 **Step 2 internal sequence:** (1) Attacker declares all Target Select targets. (2) Attacker rolls Target Select dice — mark casualties, do not remove yet. (3) Defender rolls Surprise Strike dice — attacker picks those casualties. (4) All step-2 casualties are removed. A defending sub marked as a Target Select casualty in step (2) still rolls its Surprise Strike die in step (3).
 
@@ -123,7 +124,7 @@ For each contested space, repeat steps 2–6 each round until termination:
 
 ### 4.2 Step 2 — Tactical Bombers (Attacking Only)
 
-- Each attacking tactical bomber may declare Target Select. **Before any dice are rolled, the attacker declares the specific target for each tac bomber using Target Select.**
+- Each attacking tactical bomber may declare Target Select. **Before any dice are rolled, the attacker declares the specific target for each tac bomber using Target Select.** Each tac bomber independently chooses its own target — multiple tac bombers may all declare the same unit, or each may declare a different valid unit.
 - **Forbidden targets**: infantry, air units, naval transports, submarines.
 - Target Select roll: hit on `≤3` (no Combined Arms bonus permitted). On a hit, the declared target is **immediately removed** — it does not fire in steps 3 or 4. On a miss, nothing happens.
 - **If multiple tac bombers declared the same target and that target is already removed when a later die resolves, the hit is lost — not reassigned.**
@@ -134,15 +135,17 @@ For each contested space, repeat steps 2–6 each round until termination:
 
 ### 4.3 Step 3 — Attacking Units Fire
 
-- Roll one die per attacking unit with an attack value > 0 that did not act in step 2.
+- Roll one die (unless otherwise stated) per attacking unit with an attack value > 0 that did not act in step 2, or were removed as casualties in step 2 due to surprise strikes..
 - Hit on `≤ attack value`.
+- Defender assigns hits, moves casualties behind the casualty strip.
 - Air units cannot hit subs unless a friendly destroyer is in the battle.
+- Subs can never hit air units.
 - Hits assigned to transports only if no other eligible target (exception: attacking sub Target Select).
 - Defender places hit units behind casualty strip; they still fire in step 4 this round.
 
 ### 4.4 Step 4 — Defending Units Fire
 
-- Roll one die per defending unit with a defense value > 0 (including units behind casualty strip).
+- Roll one die (unless otherwise stated) per defending unit with a defense value > 0 (including units behind casualty strip).
 - Hit on `≤ defense value`.
 - Same restrictions: air can't hit subs without friendly destroyer; transports last.
 - Attacker removes casualties immediately (these do NOT fire back this round — they already fired in step 3 if they were attackers).
@@ -222,7 +225,6 @@ Different sources can have different hit thresholds depending on which techs are
 ### 5.3 Transports — Full Behavior Summary
 
 - A=0, D=0, no combat value. Cannot fire in combat steps. Can be killed.
-- **Cannot attack alone** (must be accompanied by an attack-valued unit) — exception: amphibious assault from a friendly sea zone clear of enemy subs.
   - Strategic bombers can NOT auto-kill because they only fight 1 round.
 - **Two transports paired** (Combined Arms): one transport gains D=1.
 - **Chosen last as casualty** (exception: attacking sub Target Select can pick a transport).
@@ -230,9 +232,7 @@ Different sources can have different hit thresholds depending on which techs are
 
 ### 5.4 Destroyer (Anti-Sub)
 
-- Cancels **Treat Hostile Sea Zones as Friendly**: an enemy sub entering a sea zone with a destroyer must stop movement. Combat may ensue.
 - When in a battle, cancels enemy submarines': **Target Select, Surprise Strike, Submersible, and air-immunity**. (Super Submarines partially override — see §6.)
-- Destroyers from a power friendly to attacker but NOT in the battle do not enable these effects.
 
 ### 5.5 Strategic Bomber Air Transport (Reclassification)
 At Combat Move or Noncombat Move, a strategic or heavy bomber may be reclassified:
@@ -240,9 +240,8 @@ At Combat Move or Noncombat Move, a strategic or heavy bomber may be reclassifie
 | Reclassified Unit | Move | Attack | Defense | Capacity |
 |---|---|---|---|---|
 | Transport Plane (strat or heavy) | 6 | — | — | 2 infantry |
-| Cargo Plane (heavy only) | 6 | — | — | 2 units: infantry, artillery, mech infantry, or tank (tech applies) |
+| Cargo Plane | 6 | — | — | 2 units: infantry, artillery, mech infantry, or tank (tech applies) |
 
-- Transported units must start in the same territory as the plane.
 - Subject to AAA fire — if hit, plane AND cargo destroyed.
 - On defense, Air Transports are casualty-chosen-last.
 - **Combat Drop**: bombers are allowed drop up to 6 units into a territory where other ground units are attacking. Dropped units cannot exceed the count of overland attackers. No retreat for dropped units. Once dropped, the transport is considered retreated and cannot be a casualty.
@@ -256,26 +255,22 @@ Tech is per-nation.
 Below is how each tech mutates combat-relevant behavior:
 
 ### 6.1 Advanced Mechanized (Mech Infantry tech)
-- Mech Infantry may carry 2 infantry **or** tow 1 artillery during movement phases.
-- Mech Infantry can **blitz without a tank**.
-- Loaded mech infantry count as 1 unit when railing from an IC.
-- **Cannot** load carried/towed units onto a transport.
+- No impact on cambat
 
 ### 6.2 Self-Propelled Artillery (Artillery tech)
 - Artillery supports **2** infantry/mech infantry (instead of 1) per artillery unit for the A=2 buff.
-- Artillery movement: **2** (up from 1).
 
 ### 6.3 Improved Transports
 - Transport capacity: **3 ground units** (was 2). If carrying 3, **at least 1 must be infantry**.
-- Transports now **defend at 1**.
+- Transports now **defend at 1** (do not need to be paired). They are still taken as a casualty last.
 
 ### 6.4 Super Battleships
 - Battleship rolls **2 dice on attack/defense**: one at hit-on-≤4, one at hit-on-≤2. **Applies to shore bombardment too** (so super-BB bombardment rolls 2 dice: one ≤4 and one ≤2).
 - Battleships: **damage capacity 3** (3 hits to destroy); still fully operational at 1 hit (only the second & third hits represent damage states; rules say "considered fully operational with 1 hit").
-- **Battleship built-in AAA fires at ≤2 (up from ≤1).** Battleships built-in AAA have 3 shots per battleship against attacking air units, fired before round 1. Each AAA shot from a Super Battleship now hits on a ≤2 instead of ≤1.
+- **Battleship built-in AAA fires at ≤2 (up from ≤1).** Battleships built-in AAA have 3 shots per battleship against attacking air units, fired before round - Each AAA shot from a Super Battleship now hits on a ≤2 instead of ≤1.
   - Standalone AAA units are *not* affected by this tech — their air-defense die remains ≤1 unless **Radar and A.T.C.** is researched (which separately raises AAA-unit and facility fire to ≤2).
   - A Super Battleship must still be fully operational (0 or 1 hit) to fire its AAA.
-- **Damaged super-BB (2+ hits taken):** still rolls two dice, but each hit threshold is halved (floor division) — **≤2 and ≤1** instead of ≤4 and ≤2. Defense is unchanged. Move value is also halved. A damaged super-BB loses its AAA shots. Damage state is re-evaluated at the start of each round or after step 2 if the battleship was struck from a target selection or surprise strike.
+- **Damaged super-BB (2 hits taken):** still rolls two dice, but each hit threshold is halved (floor division) — **≤2 and ≤1** instead of ≤4 and ≤2. This applies to attack, defense, and shore bombardments. A damaged super-BB loses its AAA shots. Damage state is re-evaluated at the start of each round or after step 2 if the battleship was struck from a target selection or surprise strike.
 
 ### 6.5 Super Submarines
 - Submarine attack: **3** (up from 2). Target Select hit on `≤3`.
@@ -284,29 +279,23 @@ Below is how each tech mutates combat-relevant behavior:
 
 ### 6.6 Heavy Bombers
 - Strategic bombers on attack: **2 dice at hit-on-≤3** (was 2@2).
-- Strategic bombing raid roll: **2 dice** (sum + 2 per die for damage).
-- Bombers may be reclassified as **cargo plane** (heavy only) — see §5.5.
+- Bombers may be reclassified as **cargo plane** — see §5.5.
 
 ### 6.7 Jet Fighters
 - Fighter attack: **4** (up from 3).
-- Fighter escort/intercept value: **2** (up from 1) in the special bombing-raid air battle.
 
 ### 6.8 Super Carriers
-- Carrier capacity: **3 air units** (up from 2).
 - Carrier damage capacity: **3 hits** (still considered fully operational at 1 hit).
-- **Damaged super-carrier (2+ hits taken):** defends at D=1 (halved from 2), moves at M=1 (halved from 2); A=0 is unchanged. The carrier still cannot launch or recover air units while damaged. Planes on a damaged defending super-carrier become cargo and cannot fight. Damage state is re-evaluated at the start of each round or immediately after step 2 if the carrier was struck by a Target Select or Surprise Strike during that step.
+- **Damaged super-carrier (2 hits taken):** defends at D=1 (halved from 2); A=0 is unchanged. Damage state is re-evaluated at the start of each round or immediately after step 2 if the carrier was struck by a Target Select or Surprise Strike during that step.
 
 ### 6.9 Improved Shipyards
 - Naval costs reduced: Submarine 5, Transport 5, Destroyer 7, Cruiser 10, Carrier 13, Battleship 16.
-- Minor industrial complexes may now build capital ships.
 
 ### 6.10 Heavy Tanks
 - Tank attack: **4** (up from 3).
 
 ### 6.11 Radar and A.T.C.
-- AAA units AND facility AAA fire: hit on `≤2` (up from `≤1`).
-- Air bases scramble up to **6** (up to 3 may be allied), up from 3.
-- Air base movement bonus: **+2** to air movement, up from +1.
+- AAA units AAA fire: hit on `≤2` (up from `≤1`).
 
 ---
 
@@ -323,6 +312,7 @@ Quick-reference for who can hit whom and casualty allocation:
 | Tac bomber Target Select with AAA/BB-AAA/CR-AAA having fired | **Target Select negated** |
 | Bombardment (BB/CR) hits | Go behind casualty strip; targets still defend in step 3 of amphibious land combat |
 | Capital ship single hit (undamaged) | NOT a kill; place damage chip; unit stays on board |
+| Capital ship final hit (max HP reached) | Placed behind casualty strip; returns fire in step 4 at step-3-start values; still contributes to combined arms in step 4; if killed in step 2 → removed immediately, no return fire, cannot contribute to combined arms in steps 3–4 (other units may still pair with each other if eligible) |
 
 **Casualty selection rule (general):** the side *receiving* the hits chooses which of its own units absorbs them, subject to targeting restrictions above. Capital ships taking their first hit are damaged, not removed.
 
@@ -332,40 +322,26 @@ Quick-reference for who can hit whom and casualty allocation:
 
 ```
 For each turn:
-  1. Purchase & Repair
-  2. Combat Move (declare amphibious assaults, escorts, demonstrate air landings)
-  3. Defender declares interceptors & scramblers (between Combat Move and Conduct Combat)
-  4. Conduct Combat:
-       a. Resolve all Strategic/Tactical Bombing Raids:
-            - Air battle (if interceptors), 1 round, all air @ A=1/D=1
-            - Facility AAA fire (1 die per directly attacking bomber, hit ≤1)
-            - Bombing damage (1d6 + 2 for strat/heavy, no +2 for tac; heavy rolls 2 dice)
-            - Apply up to facility cap
-       b. Resolve all Naval Blockades (General Combat)
-       c. Resolve all Amphibious Assaults:
-            - Sea combat (General Combat)
-            - BB/CR bombardment (one die per ship, hit ≤4 BB or ≤3 CR, capped by offloaded unit count, hits go behind casualty strip)
-            - Land combat (General Combat; seaborne units cannot retreat)
-       d. Resolve all remaining General Combat (land & sea)
-  5. Noncombat Move (air units land, retreated bombers land, carriers reposition, etc.)
-  6. Mobilize New Units
-  7. Collect Income
+  1. Combat Move (declare amphibious assaults, escorts, demonstrate air landings)
+  2. Conduct Combat:
+  3. Noncombat Move (air units land, retreated bombers land, carriers reposition, etc.)
+  4. Mobilize New Units
+  5. Collect Income
 
 For each General Combat round (a single contested space):
   1. Place units on Battle Board (adjust capital ship damage states now)
   2. Special Step:
+       - AAA / built-in AAA fires (before round 1 ONLY, vs attacking air units)
        - Subs: Target Select (att) / Surprise Strike (def) / Submerge — defending destroyer negates att subs; attacking destroyer negates def subs
            - Target Select: attacker declares specific target before rolling; on miss nothing happens; excess hits on a destroyed target are lost, not reassigned
            - Surprise Strike: no pre-declaration; sub rolls, attacker picks casualty from their own units; casualty immediately removed
        - Att Tac Bombers: optional Target Select (round 1 only); negated by any AAA fire; declare specific target before rolling; excess hits lost, not reassigned
-       - AAA / built-in AAA fires (before round 1 ONLY, vs attacking air units)
        - Apply step-2 casualties immediately
   3. Attacking units fire (units that didn't act in step 2)
   4. Defending units fire (including units behind casualty strip)
   5. Remove defender's casualties
   6. Termination check:
        - All firers gone on one/both sides → end (winner = side with surviving units)
-       - Attacker may retreat all eligible units together to one origin space
   7. If continuing, return to step 2; else Conclude Combat (capture, IPC adjust, etc.)
 ```
 
@@ -373,34 +349,23 @@ For each General Combat round (a single contested space):
 
 ## 9. Edge Cases & Implementation Gotchas
 
-- **Allied units in the contested sea zone do not fight.** If you attack into a sea zone that already contains friendly allied units, those units are NOT placed on the Battle Board — they take no hits and fire no shots. They stay on the map, out of play, for the duration of that battle.
-- **Submarines and transports are "invisible" for sea-zone status checks.** When determining whether a sea zone is "hostile" (for movement, loading/offloading, retreat destinations), enemy subs and transports are ignored. A sea zone with only enemy subs and/or transports is treated as friendly for movement/loading purposes.
-- **Combined Arms is 1:1 and re-assignable across phases** but only one pairing per unit per combat round. Implementation should track pairings as a per-round assignment.
+- **Combined Arms pairings are re-evaluated at each time of firing** — step 3 (attackers) and step 4 (defenders) independently, and are not locked in from prior rounds or steps. Units behind the casualty strip are present at their time of firing and count for combined arms. For example, if an artillery is supporting an infantry and that infantry is killed, the artillery may support a different eligible infantry next time it fires. What units are paired may change within a round and round-to-round.
 - **Strategic bombers only fight round 1** in general combat — track and force retreat (or casualty) after round 1.
-- **Damaged capital ship attack/defense/move all halved** (floor division). Timing: damage state is re-evaluated at the start of each round and immediately after step 2 if struck by Target Select or Surprise Strike. An undamaged capital ship first-hit during main combat (steps 3–4) still fires at full values that round; penalty begins next round.
-- **Super Battleship rolls two dice** (one ≤4, one ≤2). Damaged super-BB still rolls two dice at 50% values (one ≤2, one ≤1).
+- **Damaged capital ship attack/defense/move all halved** (floor division). Timing: damage state is re-evaluated at the start of each round and immediately after step 2 if struck by Target Select or Surprise Strike. An undamaged capital ship first-hit during main combat (steps 3–4) still fires at full values that round; any penalty(s) begins next round.
+- **Super Battleship rolls two dice** (one ≤4, one ≤2). Damaged super-BB (2 hits) still rolls two dice at 50% values (one ≤2, one ≤1).
 - **AAA only fires once per battle** — track a "has fired" flag per AAA source.
 - **Step 2 (subs) repeats per round; step 2 (tac bombers) does NOT repeat (round 1 only).**
-- **Submerged subs**: stay in the sea zone with a marker; surface at owner's next turn (Repair Units phase). They cannot disrupt convoy/lend-lease while submerged.
-- **Subs that submerged before any dice were rolled** are NOT casualties and are NOT removed from play — they're set aside until the controller's next turn.
+- **Subs that submerged before any dice were rolled** are NOT casualties and are NOT removed from play — they're set aside until the controller's next turn. Subs that submerge before any round of combat are no longer apart of the battle. They are immediately placed back onto the board.
 - **Attacking sub Target Selects a defending sub that is Surprise Striking**: both roll. Target Select dice resolve first (step 2a) — if the defending sub is hit it is marked but not yet removed. The defending sub then rolls its Surprise Strike die (step 2b). All step-2 casualties are removed together after both phases resolve.
 - **Attacking sub Target Select is the ONLY scenario where a transport is a valid first-choice target** despite "transport chosen last" — defending subs doing Surprise Strike still hit per attacker's casualty choice (normal rules).
 - **Target Select is pre-declared, not a post-roll casualty pick.** The attacker names the specific target unit before any die is rolled. If the declared target is already gone when a later die resolves (e.g. two subs both named the same destroyer and the first hit killed it), the second hit is lost — it is NOT reassigned to another unit. Surprise Strike has no pre-declaration; the attacker picks the casualty reactively after the roll.
 - **Auto-destroyed defenseless transports**: only triggers if attacker has at least one unit that can fight >1 round AND the only defenders are transports. Strategic bombers (1-round-only) do NOT count for this trigger.
-- **Lone transports / sub-only sea zones**: don't block movement. But a sea unit that "auto-destroys" a lone transport must commit to a sea-combat resolution (one round) and then can no longer freely pass.
 - **Air units in amphibious assaults**: lock their pre-declared assignment (sea OR land), and they all land in Noncombat Move.
 - **Bombing-raid escorts and interceptors are LOCKED for the turn** — once declared, neither can participate in any other battle that turn, including any other battle in the same territory, regardless of whether the air battle actually happens.
 - **Escort fighters retreat after the air battle** and are NOT subject to facility AAA — only the bombers face facility AAA.
-- **Facility AAA fires per facility, per directly-assigned bomber.** Bombers assigned to the IC are only shot at by the IC's AAA, not the naval base's AAA. The attacker must declare per-bomber target facility.
-- **Tactical bombers cannot strategic-bomb industrial complexes** — only air bases and naval bases.
 - **Carrier hit by sub Target Select**: gets a damage chip; still alive; cannot launch/recover until repaired.
 - **Damaged battleship cannot bombard, cannot fire built-in AAA.**
-- **Cruiser+Battleship pair**: cruiser defends at 4 (battleship's defense unchanged at 4 already).
-- **Liberation exceptions**: Dutch territories and French Indo-China captured from Japan are NOT liberated. Other liberations follow the roundel indicator (left = optional, right = mandatory return).
-- **Capital re-capture**: if a capital changes hands a second time (e.g. Allies → Axis → Allies again), its unspent IPCs are forfeited to the bank, NOT transferred to the latest captor.
-- **Captured Major IC becomes a Minor IC**, and existing damage is transferred down — but capped at the Minor IC's strategic-bomber cap (10).
-- **Defending carrier loses planes when destroyed/damaged**: surviving defending air must (in priority) land on the same carrier if undamaged, then another friendly carrier in same sea zone, then move 1 space to a friendly carrier/territory, else die. Resolved in Noncombat Move before the acting player's regular noncombat moves.
-- **Defending fighters on a damaged carrier cannot defend at all** — they become cargo and die if the carrier dies.
+- **Cruiser+Battleship pair**: cruiser defends at 4 (battleship's own defense value is unchanged). Pairing is evaluated when defending units fire (step 4) — any battleship present at that moment, including one behind the casualty strip, counts for this buff. A battleship killed in step 2 is removed before step 4 and cannot contribute. A battleship on the casualty strip (killed during step 3) is still present at step 4 and can pair. The cruiser can pair with any battleship present when it fires; if no battleship is present, it defends at base 3.
 
 ---
 
@@ -420,9 +385,9 @@ For each General Combat round (a single contested space):
 | Submarine | 6 | 2/3** | 1 | 2 | 1 | **A=3 with Super Subs; Target Select |
 | Transport | 7 | 0 | 0/1†† | 2 | 1 | ††D=1 paired (or w/ Improved Transports) |
 | Destroyer | 8 | 2 | 2 | 2 | 1 | Anti-sub |
-| Cruiser | 12 | 3 | 3/4‡‡ | 2 | 1 | ‡‡D=4 paired with battleship |
+| Cruiser | 12 | 3 | 3/4‡‡ | 2 | 1 | ‡‡D=4 paired with battleship, even if the battleship is damaged |
 | Carrier | 16 | 0 | 2 | 2 | 2 | Capital; carries 2 (3 w/ Super Carriers) |
-| Battleship | 20 | 4 / 2 dice§§ | 4 / 2 dice§§ | 2 | 2 / 3§§ | §§Super Battleships: 2 dice (≤4 & ≤2), HP 3 |
+| Battleship | 20 | 4 / 2 dice§§ | 4 / 2 dice§§ | 2 | 2 / 3§§ | §§Super Battleships: 2 dice (≤4 & ≤2)(still fully-functioning with 1 hit), HP 3; damaged BB: A/D 2, Mv 1; damaged SBB (2 hits): 2 dice (≤2 & ≤1), Mv 1 |
 
 *Apply Improved Shipyards costs separately if tech is held: Sub 5, Transport 5, Destroyer 7, Cruiser 10, Carrier 13, BB 16.*
 
@@ -432,31 +397,22 @@ For each General Combat round (a single contested space):
 
 Items where the source rulebook is unclear, contradictory, or contains implementation-critical nuances worth flagging:
 
-1. **AAA defense value vs AAA fire die under Super Battleships tech.** Source says "AAA defend at 2 up from 1" bundled with Super BBs, but AAA's listed tech upgrade is Radar and A.T.C. The most consistent reading is that both techs independently raise AAA *fire* hit-on-die to `≤2`. AAA's casualty-step defense value (D=1) should be treated as unchanged. (See §6.4.)
+1. **AAA defense value vs AAA fire die under Super Battleships tech.** *(Resolved.)* The source rulebook ambiguously bundles "AAA defend at 2 up from 1" with Super Battleships, but AAA's listed tech upgrade is Radar and A.T.C. These are two independent techs that each raise a different source's air-defense hit threshold: **Super Battleships** raises battleship built-in AAA to `≤2`; **Radar and A.T.C.** raises AAA-unit fire to `≤2`. Neither tech affects the other's source. AAA's casualty-step defense value (D=1) is unchanged by either tech. (See §6.4 and §6.11.)
 
 2. **"Damaged capital ship attacks/defends/moves at 50% capacity, rounded down."** The source says "50% capacity" and applies to attack, defense, and move. Implementation should floor-divide all three by 2. For a damaged super-battleship (2 dice, ≤4 and ≤2), halving each die produces ≤2 and ≤1. Note the timing carve-out: an undamaged capital ship first-hit during main combat (steps 3–4) fires back at full values that round; the 50% penalty starts next round. A capital ship first-hit in step 2 (Target Select / Surprise Strike) defends at halved values for steps 3–4 of that same round.
 
 3. **Tactical bomber Target Select round-1-only AND forfeits Combined Arms for the entire battle.** This combination means: if you Target Select with a tac bomber in round 1, in rounds 2+ that tac bomber fires at base attack 3 only — it does NOT get the Combined Arms bonus to 4, even if paired with a fighter or tank for the whole battle. Track a "used Target Select this battle" flag per tac bomber.
 
-4. **Sub-only or transport-only sea zone status.** When checking whether a sea zone is "hostile" for movement, loading, retreat destinations, etc., enemy submarines and enemy transports are *ignored*. But they are still units — they can still be attacked, and a paired-transport defender (D=1) DOES block enemy movement.
+4. **Defenseless transport auto-destroy** requires the attacker to have a unit that can fight more than 1 round. Strategic bombers (round-1 only) do NOT trigger this. A force of strat bombers vs lone transports must roll the bombing round normally.
 
-5. **Defenseless transport auto-destroy** requires the attacker to have a unit that can fight more than 1 round. Strategic bombers (round-1 only) do NOT trigger this. A force of strat bombers vs lone transports must roll the bombing round normally.
+5. **Capital ship "fully operational with 1 hit" under Super Battleships / Super Carriers tech.** The source explicitly says these are fully operational at 1 hit. Implementation: super-BB / super-Carrier with 1 hit fights at full values; the 50%-when-damaged rule kicks in only at 2 hits. (For a normal BB/Carrier, the 50% rule kicks in at 1 hit.)
 
-6. **Capital ship "fully operational with 1 hit" under Super Battleships / Super Carriers tech.** The source explicitly says these are fully operational at 1 hit. Implementation: super-BB / super-Carrier with 1 hit fights at full values; the 50%-when-damaged rule kicks in only at 2 hits. (For a normal BB/Carrier, the 50% rule kicks in at 1 hit.)
+6. **Cruiser combined arms (battleship + cruiser → cruiser D=4)** Each cruiser requires a battleship to pair with for this buff, and each battleship can only pair with one cruiser (1:1). Pairing is evaluated when defending units fire (step 4). A battleship on the casualty strip is present at step 4 and counts for this buff. A battleship killed in step 2 is not present at step 4 and cannot contribute.
 
-7. **Cruiser combined arms (battleship + cruiser → cruiser D=4) is listed twice** in the source under the cruiser profile. This is a source duplication, not an indication of stacking. A single cruiser pairs with at most one battleship for this defense buff.
+7. **Submarine "Strike" terminology.** The source uses "Strike" and "Surprise Strike" for defending submarine attacks in step 2. "Target Select" is reserved for attacking submarines (and attacking tac bombers). They are functionally different: Target Select is **pre-declared** (the firer names a specific target before rolling; a miss wastes the shot; excess hits on the same target are lost); Surprise Strike has **no pre-declaration** (the sub rolls and the **attacker picks the casualty** from their own units, exactly like normal casualty selection, but applied immediately).
 
-8. **Bombing-raid damage range:**
-   - Tactical bomber: 1d6 per bomber → 1-6 damage per bomber.
-   - Strategic bomber (normal): 1d6+2 per bomber → 3-8 damage per bomber.
-   - Strategic bomber (Heavy Bombers tech): 2d6+2 each die (sum) per bomber → 6-16 damage per bomber. (Each die individually gets +2 then summed.)
+8. **Attacking sub Target Select can pick a transport.** This is the single exception to the "transports chosen last" rule. Other targeting (including air units hitting non-sub targets) still follows the "transport chosen last" rule.
 
-9. **Submarine "Strike" terminology.** The source uses "Strike" and "Surprise Strike" for defending submarine attacks in step 2. "Target Select" is reserved for attacking submarines (and attacking tac bombers). They are functionally different: Target Select is **pre-declared** (the firer names a specific target before rolling; a miss wastes the shot; excess hits on the same target are lost); Surprise Strike has **no pre-declaration** (the sub rolls and the **attacker picks the casualty** from their own units, exactly like normal casualty selection, but applied immediately).
+9. **Target Select is a pre-declared commit, not a post-roll casualty pick.** For attacking submarines and attacking tactical bombers, the attacker names the specific target unit *before* any dice are rolled for that step. Each Target Selecting unit independently chooses its own target — multiple units may all declare the same unit, or each may declare a different valid unit. Consequence: if two units both declare the same target and the first hit destroys it, the second hit is wasted — it cannot be redirected to another unit. Surprise Strike does not work this way — it is a roll-then-casualty-pick mechanic where the attacker chooses which of their own units absorbs the hit.
 
-10. **Attacking sub Target Select can pick a transport.** This is the single exception to the "transports chosen last" rule. Other targeting (including air units hitting non-sub targets) still follows the "transport chosen last" rule.
-
-11. **Target Select is a pre-declared commit, not a post-roll casualty pick.** For attacking submarines and attacking tactical bombers, the attacker names the specific target unit *before* any dice are rolled for that step. Consequence: if two units both declare the same target and the first hit destroys it, the second hit is wasted — it cannot be redirected to another unit. Surprise Strike does not work this way — it is a roll-then-casualty-pick mechanic where the attacker chooses which of their own units absorbs the hit.
-
-12. **Air units in an amphibious assault**: must be pre-declared as sea-combat OR land-combat assigned. The source does not say this assignment occurs before the attacker sees the defender's scramble decision, but it does say scrambling happens AFTER the attacker assigns its air. So the sequence is: attacker announces amphibious assault → attacker assigns each attacking air unit to sea or land → defender declares scrambles → resolve.
-
-13. **Carrier "must move to land otherwise-stranded planes" rule** only applies if the carrier did not combat-move and did not participate in combat. A carrier already used in combat is not obligated.
+10. **Air units in an amphibious assault**: must be pre-declared as sea-combat OR land-combat assigned. This assignment occurs before the attacker sees the defender's scramble decision; scrambling happens AFTER the attacker assigns its air. So the sequence is: attacker announces amphibious assault → attacker assigns each attacking air unit to sea or land → defender declares scrambles → resolve.

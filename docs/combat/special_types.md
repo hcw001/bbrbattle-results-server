@@ -80,3 +80,25 @@ Order within each assault:
 Fighters and tactical bombers in a territory with an operative air base may scramble to defend an **adjacent sea zone** when it is attacked. Base ability: up to 3 scrambling air units (max 3, up to 3 may be allied). With **Radar and A.T.C.** tech, this becomes up to 6 (still up to 3 allied).
 
 ---
+
+## 6. Sequence Cheatsheet (for implementation)
+During the Conduct Combat Phase - before any general combat:
+a. Resolve all Strategic/Tactical Bombing Raids:
+   - Air battle (if interceptors), 1 round, all air @ A=1/D=1
+   - Facility AAA fire (1 die per directly attacking bomber, hit ≤1)
+   - Bombing damage (1d6 + 2 for strat/heavy, no +2 for tac; heavy rolls 2 dice)
+   - Apply up to facility cap
+b. Resolve all Naval Blockades (General Combat)
+c. Resolve all Amphibious Assaults:
+   - Sea combat (General Combat)
+   - BB/CR bombardment (one die per ship, hit ≤4 BB or ≤3 CR, capped by offloaded unit count, hits go behind casualty strip)
+   - Land combat (General Combat; seaborne units cannot retreat.
+d. Resolve all remaining General Combat (land & sea)
+
+## 7. Implementation Notes
+- **Facility AAA fires per facility, per directly-assigned bomber.** Bombers assigned to the IC are only shot at by the IC's AAA, not the naval base's AAA. The attacker must declare per-bomber target facility.
+- **Tactical bombers cannot strategic-bomb industrial complexes** — only air bases and naval bases.
+- **Bombing-raid damage range:**
+   - Tactical bomber: 1d6 per bomber → 1-6 damage per bomber.
+   - Strategic bomber (normal): 1d6+2 per bomber → 3-8 damage per bomber.
+   - Strategic bomber (Heavy Bombers tech): 2d6+2 each die (sum) per bomber → 6-16 damage per bomber. (Each die individually gets +2 then summed.)
