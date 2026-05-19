@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # What This Is
 
-The project is a battle simulator for a board game. It provides a robust API for simulating combat in the board game. The objective is to implement an API with all rules of combat configured and executable. 
+The project is a battle simulator for a board game. It provides a robust API for simulating combat in the board game. The objective is to implement an API with all rules of combat configured and executable.
 
 ## Implementation
 
