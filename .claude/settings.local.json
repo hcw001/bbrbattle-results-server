@@ -6,7 +6,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "true"
+                        "command": ".claude/hooks/read_hook.py"
                     }
                 ]
             }

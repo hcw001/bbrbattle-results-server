@@ -17,9 +17,10 @@ Combat occurs in **territories** (land) or **sea zones** (naval).
 
 ### 1.3 Capital Ships & Damage
 - **Capital ships** = Battleships and Aircraft Carriers. They have **damage capacity 2** (require 2 hits to destroy).
-- A damaged capital ship (1 hit applied) **attacks at 50% capacity**, rounded down. Example: a damaged battleship attacks at `2` instead of `4`.
-- **When a defending capital ship takes 1 hit during a round of combat, it returns fire at full value.** Damaged defending capital ship units adjust their combat (defending) value at the beginning of each round of combat, not in the middle of the round.
-- Damage is applied/adjusted at the **start of each combat round**, never mid-round.
+- A damaged capital ship (1 hit applied) **attacks, defends, and moves at 50% capacity**, rounded down. Example: a damaged battleship attacks/defends at `2` (and moves `1`) instead of `4` (and `2`); a damaged carrier defends at `1` (and moves `1`) instead of `2` (and `2`). (A=0 for carriers is unchanged.)
+- **Timing carve-out for defense:** an already-damaged capital ship defends at halved value from the start of the round. An undamaged capital ship that takes its first hit during main combat (steps 3–4) still returns fire at full defense that round — the damage penalty applies from the next round onward.
+- Damage state is re-evaluated at the **start of each combat round** and also **immediately after step 2** if the capital ship was struck by a Target Select or Surprise Strike during that step (so a capital ship first-hit in step 2 defends at halved value when main combat fires in steps 3–4).
+- A damaged capital ship **loses its built-in AAA** and **cannot shore bombard**.
 - A single hit on an undamaged capital ship places a damage chip — the unit is **not** moved behind the casualty strip and is **not** destroyed.
 
 ---
@@ -61,7 +62,7 @@ Legend: A = Attack, D = Defense, M = Movement, HP = Damage Capacity, Cost = IPCs
 | Transport | 7 | 0 | 0 | 2 | 1 | 2 land units | Improved Transports | Cargo only; chosen as casualty last; ignored by enemy movement when alone; cannot attack alone |
 | Destroyer | 8 | 2 | 2 | 2 | 1 | — | — | Negates submarine special abilities (Target Select, Surprise Strike, Submerge, stealth, air-immunity) |
 | Cruiser | 12 | 3 | 3 | 2 | 1 | — | — | Shore bombard at 3; built-in AAA (1 shot each); pairs with battleship for D=4 |
-| Aircraft Carrier | 16 | 0 | 2 | 2 | 2 | 2 air units | Super Carriers | Capital ship; carries fighters + tactical bombers; damaged carrier cannot launch/recover |
+| Aircraft Carrier | 16 | 0 | 2 | 2 | 2 | 2 air units | Super Carriers | Capital ship; carries fighters + tactical bombers; damaged carrier cannot launch or recover air units — planes on a damaged defending carrier become cargo (cannot fight; die with the carrier if destroyed) |
 | Battleship | 20 | 4 | 4 | 2 | 2 | — | Super Battleships | Capital ship; shore bombard at 4; built-in AAA (3 shots each) |
 
 **Surface warships** = Carriers, Battleships, Cruisers, Destroyers. **Submarines and Transports are NOT surface warships and are NOT warships respectively.**
@@ -172,101 +173,85 @@ Combat ends when either of these is true (checked in order):
 
 ## 5. Special Rules & Edge Cases
 
-### 5.1 AAA Units (in normal combat, not bombing)
+### 5.1 Air-Defense Fire
 
-- AAA fires **once, before round 1** of combat in the territory it's in, when **attacked by air units**.
-- **Shots = min(3 × number of AAA units, number of attacking air units).** Each attacking air unit can be fired upon at most once.
-- Each shot: hit on `≤1` (base). With **Radar and A.T.C. tech**: hit on `≤2`.
-- Hits are removed immediately and do not participate further in the battle. Attacker picks which air units die.
-- **AAA cannot fire in defending units fire step** (A=0, D=1 only counts for being a casualty in normal combat — it's a "free hit absorber").
+- **AAA units are defense-only.** They may not be included in an attacking force and do not fire during attacks.
+- **AAA cannot fire in the defending units fire step** (A=0, D=1 only counts for being a casualty in normal combat — it's a "free hit absorber").
 
-### 5.2 Battleship & Cruiser Built-in AAA
+All air-defense fire (AAA units, battleship built-in AAA, cruiser built-in AAA) follows the same cap. When multiple sources are present in the same space, their shot pools **add together** into one combined volley, but the "fired upon at most once" cap applies to the **combined** volley.
 
-- Same mechanic as AAA units, but per-ship:
-  - Battleship: **up to 3 shots** per battleship (max = min(3 × #BB, #attacking air)). Hit on `≤1`.
-  - Cruiser: **up to 1 shot** per cruiser (max = min(1 × #CR, #attacking air)). Hit on `≤1`.
-- Fires before round 1 of combat against attacking air.
-- Subject to fly-over rules in the same way as land AAA.
-- **Damaged battleships cannot fire AAA.**
-- **This AAA negates Target Select** by tactical bombers.
+> **Total dice rolled = min( Σ (units × shots-per-unit), number of attacking air units )**
+> Each attacking air unit may be fired upon **at most once** across the entire air-defense volley, regardless of source.
+> When the pool exceeds the cap, **the defender chooses which sources contribute the shots.**
 
-### 5.3 Submarines — Full Behavior Summary
+| Source                | Shots per unit | Hit on | Notes                                                |
+|-----------------------|----------------|--------|------------------------------------------------------|
+| AAA unit              | 3              | ≤1     | ≤2 with Radar and A.T.C.                             |
+| Battleship (built-in) | 3              | ≤1     | ≤2 with Super Battleships; must be fully operational |
+| Cruiser (built-in)    | 1              | ≤1     | Not buffed by any tech                               |
 
-- **Treat Hostile Sea Zones as Friendly**: subs ignore enemy units when moving (unless an enemy destroyer is present, which forces stop).
-- **Does Not Block Enemy Movement**: a sea zone with ONLY enemy subs does not stop a non-sub unit's movement. Entering a sub-only sea zone, the moving player may choose to attack or not.
+**Why source choice matters:**
+Different sources can have different hit thresholds depending on which techs are researched. The defender benefits from preferring the higher-hit-chance source. Examples:
+- With **Super Battleships** but no Radar: battleship AAA hits ≤2, AAA units hit ≤1 → prefer battleship shots.
+- With **Radar** but no Super BB: AAA units hit ≤2, battleship AAA hits ≤1 → prefer AAA-unit shots.
+- With both: AAA units and battleship AAA both hit ≤2; cruisers still hit ≤1 → prefer either over cruisers.
+
+**Worked examples — single source:**
+- 5 fighters attack a territory with 2 AAA → `min(2×3, 5) = 5` shots.
+- 5 fighters attack a territory with 1 AAA → `min(1×3, 5) = 3` shots.
+- 5 fighters attack a sea zone with 2 cruisers → `min(2×1, 5) = 2` shots.
+- 2 fighters attack a sea zone with 3 battleships → `min(3×3, 2) = 2` shots (capped by attacker count).
+
+**Worked examples — mixed sources:**
+- 4 fighters attack a sea zone with **1 battleship + 1 cruiser** → pool is `(1×3) + (1×1) = 4`; cap is `min(4, 4) = 4`. All 4 dice are rolled; no choice to make.
+- 4 fighters attack a sea zone with **2 battleships + 2 cruisers**, no relevant techs → pool is `(2×3) + (2×1) = 8`; cap is `min(8, 4) = 4`. Defender chooses 4 shots from the pool — since all sources hit ≤1, the choice doesn't matter mechanically.
+- 4 fighters attack a sea zone with **2 battleships + 2 cruisers**, defender has **Super Battleships** → pool is still 8, cap is still 4. Defender picks **4 battleship shots** (hit ≤2) over any cruiser shots (hit ≤1).
+- 6 fighters attack a sea zone with **1 battleship (damaged) + 2 cruisers** → damaged BB contributes nothing; pool is `(2×1) = 2`; cap is `min(2, 6) = 2`. Only 2 dice rolled.
+
+**Timing:** All air-defense fire happens **once, before the first round of combat**, as a single combined volley. Hits are removed immediately and those air units do not participate in the battle. The attacker chooses which air units are removed.
+
+**Damaged battleships cannot fire AAA.** They contribute 0 shots to the volley (reflected in the "must be fully operational" note in the table above).
+
+**Air-defense fire negates tac bomber Target Select.** If the air-defense volley fires before round 1, attacking tactical bombers may not use Target Select that battle.
+
+### 5.2 Submarines — Full Behavior Summary
+
 - **Cannot hit / be hit by air units** unless a friendly destroyer is in the battle.
 - All special abilities (Target Select, Surprise Strike, Submerge, stealth, air-immunity) are **cancelled by an opposing-side destroyer in the same battle**: a defending destroyer cancels attacking subs' abilities; an attacking destroyer cancels defending subs' abilities.
-- Destroyers belonging to a power *friendly to the attacker but not in the battle* do NOT cancel sub abilities.
 
-### 5.4 Transports — Full Behavior Summary
+### 5.3 Transports — Full Behavior Summary
 
 - A=0, D=0, no combat value. Cannot fire in combat steps. Can be killed.
 - **Cannot attack alone** (must be accompanied by an attack-valued unit) — exception: amphibious assault from a friendly sea zone clear of enemy subs.
-- **Does Not Block Enemy Movement** when alone: a sea zone with only one enemy transport doesn't stop movement. Sea/air units with an attack value that can fight >1 round and end combat move there **automatically destroy** the transport (counts as a sea combat).
-  - Exception: an air unit can't auto-kill (it can only attack 1 round? — actually air units do attack multiple rounds in general combat; the rule applies to "air or sea units with an attack value which can attack more than a single round". Strategic bombers can NOT auto-kill because they only fight 1 round. Fighters/tac bombers CAN.)
-- **Two transports paired** (Combined Arms): one transport gains D=1 and **the pair DOES block enemy movement**.
-- A **lone Improved Transport** (with tech) does NOT block enemy movement — still needs pairing.
+  - Strategic bombers can NOT auto-kill because they only fight 1 round.
+- **Two transports paired** (Combined Arms): one transport gains D=1.
 - **Chosen last as casualty** (exception: attacking sub Target Select can pick a transport).
 - **Carry capacity**: 2 units max, where the second unit must be infantry. Valid configurations: 2 infantry, OR 1 infantry + 1 of {tank, mech infantry, artillery, AAA}. Cannot carry IC, air base, or naval base.
-- **Loading and offloading rules**:
-  - Loading/offloading consumes a land unit's entire move that turn.
-  - Transport can load before/during/after its move, in friendly sea zones.
-  - May load → move 1 → load more → move 1 → offload. Or stay at sea with cargo (if cargo was loaded previously, or this turn in Noncombat, or for a retreated amphibious assault).
-  - Cannot load or offload in a hostile sea zone (subs/transports are ignored when determining "hostile").
-  - **One offload destination per turn** (one territory).
-  - Cannot offload after retreating.
-  - "Bridging" allowed: load and offload in same sea zone without moving.
-  - Friendly powers' units must load on their controller's turn, ride on transport owner's turn, offload on a later controller turn.
 
-### 5.5 Destroyer (Anti-Sub)
+### 5.4 Destroyer (Anti-Sub)
 
 - Cancels **Treat Hostile Sea Zones as Friendly**: an enemy sub entering a sea zone with a destroyer must stop movement. Combat may ensue.
 - When in a battle, cancels enemy submarines': **Target Select, Surprise Strike, Submersible, and air-immunity**. (Super Submarines partially override — see §6.)
 - Destroyers from a power friendly to attacker but NOT in the battle do not enable these effects.
 
-### 5.6 Fighters & Tactical Bombers — Carrier Operations
-
-- Both can land on/take off from carriers.
-- Carrier base capacity: 2 air units. With **Super Carriers** tech: 3.
-- Air units on a friendly power's carrier are cargo on the carrier owner's turn (they can defend if the carrier is attacked, per below).
-- Carrier aircraft move independently on their own turn but with the carrier on its turn if owned by a different power.
-- On its own turn, air launches BEFORE the carrier moves (even if not leaving the sea zone). Possible: carrier combat-moves while its planes stay behind to noncombat-move.
-- **During Noncombat Move**: fighters/tac bombers may move to land on carriers. Carriers that did not combat-move may also reposition for landings. Carriers **must** move if they're the only way to land an otherwise stranded plane.
-- **Damaged carrier**: cannot launch or recover air. Any guest air on board becomes cargo, cannot defend, cannot leave until repaired. Planes that planned to land must find alternates or be destroyed.
-- **Defending carrier**: when an undamaged carrier is attacked, its planes (including allied guests) defend in the air, even vs subs-only attackers (but they still can't hit subs without a friendly destroyer present).
-- **Defending carrier destroyed/damaged mid-combat**: air units that were defending must, in this priority order during the subsequent Noncombat Move (before the acting player's normal noncombat movements):
-  1. Land on the same carrier if it survived undamaged.
-  2. Land on a different friendly carrier in the same sea zone.
-  3. Move 1 space to a friendly carrier or friendly territory.
-  4. Otherwise, be destroyed.
-
-### 5.7 Air Unit Landing & Range Rules
-
-- Air units cannot land in territories captured this turn, or territories converted from friendly neutrals this turn.
-- Each sea-zone or territory crossing = 1 movement point.
-- **During Combat Move, you must be able to demonstrate a plausible landing path for every attacking air unit** (combat moves, planned noncombat moves, carrier mobilizations). After demonstrating this, you have no guarantee — battle losses may strand planes (they die at end of Noncombat).
-- If you declared a carrier would noncombat-move to receive a plane, you must follow through (unless the plane is already landed safely or destroyed, or a clearing combat failed).
-
-### 5.8 Strategic Bomber Air Transport (Reclassification)
+### 5.5 Strategic Bomber Air Transport (Reclassification)
 At Combat Move or Noncombat Move, a strategic or heavy bomber may be reclassified:
 
 | Reclassified Unit | Move | Attack | Defense | Capacity |
 |---|---|---|---|---|
 | Transport Plane (strat or heavy) | 6 | — | — | 2 infantry |
-| Cargo Plane (heavy only) | 6 | — | — | 2 units: artillery, mech infantry, or tank (tech applies); may swap 1 unit for 1 infantry |
+| Cargo Plane (heavy only) | 6 | — | — | 2 units: infantry, artillery, mech infantry, or tank (tech applies) |
 
 - Transported units must start in the same territory as the plane.
 - Subject to AAA fire — if hit, plane AND cargo destroyed.
-- Air Transports are casualty-chosen-last.
-- **Combat Drop**: drop up to 6 units into a territory where other ground units are attacking. Dropped units cannot exceed the count of overland attackers. No retreat for dropped units. Once dropped, the transport is considered retreated and cannot be a casualty.
-- **Noncombat Drop**: max 2 units per territory; the territory must have been controlled by you or an ally at start of your turn.
-- Reverts to bomber stats at the next Repair Units phase.
+- On defense, Air Transports are casualty-chosen-last.
+- **Combat Drop**: bombers are allowed drop up to 6 units into a territory where other ground units are attacking. Dropped units cannot exceed the count of overland attackers. No retreat for dropped units. Once dropped, the transport is considered retreated and cannot be a casualty.
 
 ---
 
 ## 6. Research & Technology Effects
 
-Tech is per-nation, 4 IPCs to start at Phase 1, progresses through P1 → P2 → P3 → Hold. Only one tech in development at a time. Cancelling forfeits all IPCs spent. 11 techs available.
+Tech is per-nation.
 
 Below is how each tech mutates combat-relevant behavior:
 
@@ -279,20 +264,18 @@ Below is how each tech mutates combat-relevant behavior:
 ### 6.2 Self-Propelled Artillery (Artillery tech)
 - Artillery supports **2** infantry/mech infantry (instead of 1) per artillery unit for the A=2 buff.
 - Artillery movement: **2** (up from 1).
-- Artillery may blitz with a tank originating in the same territory.
 
 ### 6.3 Improved Transports
 - Transport capacity: **3 ground units** (was 2). If carrying 3, **at least 1 must be infantry**.
 - Transports now **defend at 1**.
-- A lone Improved Transport is still ignored (does not block movement on its own).
 
 ### 6.4 Super Battleships
 - Battleship rolls **2 dice on attack/defense**: one at hit-on-≤4, one at hit-on-≤2. **Applies to shore bombardment too** (so super-BB bombardment rolls 2 dice: one ≤4 and one ≤2).
 - Battleships: **damage capacity 3** (3 hits to destroy); still fully operational at 1 hit (only the second & third hits represent damage states; rules say "considered fully operational with 1 hit").
-- **AAA defend at 2 (up from 1)** — this line is bundled with Super Battleships in the source rules. It is ambiguous whether this refers to:
-  - (a) AAA-fire die going from `≤1` to `≤2` (matching what Radar and A.T.C. does for AAA), OR
-  - (b) AAA unit's *defense value* (used when taken as a casualty) going from 1 to 2.
-  - **Implementation note**: the most common interpretation, given Radar's parallel wording ("AAA Artillery units and Facility fire is increased to 2"), is interpretation (a). Treat AAA-fire hits as `≤2` when *either* tech is held. The defending-step defense value of AAA (D=1) is unchanged.
+- **Battleship built-in AAA fires at ≤2 (up from ≤1).** Battleships built-in AAA have 3 shots per battleship against attacking air units, fired before round 1. Each AAA shot from a Super Battleship now hits on a ≤2 instead of ≤1.
+  - Standalone AAA units are *not* affected by this tech — their air-defense die remains ≤1 unless **Radar and A.T.C.** is researched (which separately raises AAA-unit and facility fire to ≤2).
+  - A Super Battleship must still be fully operational (0 or 1 hit) to fire its AAA.
+- **Damaged super-BB (2+ hits taken):** still rolls two dice, but each hit threshold is halved (floor division) — **≤2 and ≤1** instead of ≤4 and ≤2. Defense is unchanged. Move value is also halved. A damaged super-BB loses its AAA shots. Damage state is re-evaluated at the start of each round or after step 2 if the battleship was struck from a target selection or surprise strike.
 
 ### 6.5 Super Submarines
 - Submarine attack: **3** (up from 2). Target Select hit on `≤3`.
@@ -302,7 +285,7 @@ Below is how each tech mutates combat-relevant behavior:
 ### 6.6 Heavy Bombers
 - Strategic bombers on attack: **2 dice at hit-on-≤3** (was 2@2).
 - Strategic bombing raid roll: **2 dice** (sum + 2 per die for damage).
-- Bombers may be reclassified as **cargo plane** (heavy only) — see §5.8.
+- Bombers may be reclassified as **cargo plane** (heavy only) — see §5.5.
 
 ### 6.7 Jet Fighters
 - Fighter attack: **4** (up from 3).
@@ -311,6 +294,7 @@ Below is how each tech mutates combat-relevant behavior:
 ### 6.8 Super Carriers
 - Carrier capacity: **3 air units** (up from 2).
 - Carrier damage capacity: **3 hits** (still considered fully operational at 1 hit).
+- **Damaged super-carrier (2+ hits taken):** defends at D=1 (halved from 2), moves at M=1 (halved from 2); A=0 is unchanged. The carrier still cannot launch or recover air units while damaged. Planes on a damaged defending super-carrier become cargo and cannot fight. Damage state is re-evaluated at the start of each round or immediately after step 2 if the carrier was struck by a Target Select or Surprise Strike during that step.
 
 ### 6.9 Improved Shipyards
 - Naval costs reduced: Submarine 5, Transport 5, Destroyer 7, Cruiser 10, Carrier 13, Battleship 16.
@@ -393,7 +377,7 @@ For each General Combat round (a single contested space):
 - **Submarines and transports are "invisible" for sea-zone status checks.** When determining whether a sea zone is "hostile" (for movement, loading/offloading, retreat destinations), enemy subs and transports are ignored. A sea zone with only enemy subs and/or transports is treated as friendly for movement/loading purposes.
 - **Combined Arms is 1:1 and re-assignable across phases** but only one pairing per unit per combat round. Implementation should track pairings as a per-round assignment.
 - **Strategic bombers only fight round 1** in general combat — track and force retreat (or casualty) after round 1.
-- **Damaged capital ship attack/move halved** — but defense unchanged. Damage state is re-applied at the start of each round, not mid-round.
+- **Damaged capital ship attack/defense/move all halved** (floor division). Timing: damage state is re-evaluated at the start of each round and immediately after step 2 if struck by Target Select or Surprise Strike. An undamaged capital ship first-hit during main combat (steps 3–4) still fires at full values that round; penalty begins next round.
 - **Super Battleship rolls two dice** (one ≤4, one ≤2). Damaged super-BB still rolls two dice at 50% values (one ≤2, one ≤1).
 - **AAA only fires once per battle** — track a "has fired" flag per AAA source.
 - **Step 2 (subs) repeats per round; step 2 (tac bombers) does NOT repeat (round 1 only).**
@@ -450,7 +434,7 @@ Items where the source rulebook is unclear, contradictory, or contains implement
 
 1. **AAA defense value vs AAA fire die under Super Battleships tech.** Source says "AAA defend at 2 up from 1" bundled with Super BBs, but AAA's listed tech upgrade is Radar and A.T.C. The most consistent reading is that both techs independently raise AAA *fire* hit-on-die to `≤2`. AAA's casualty-step defense value (D=1) should be treated as unchanged. (See §6.4.)
 
-2. **"Damaged capital ship attacks/moves at 50% capacity, rounded down."** The source says "50% capacity" and gives a battleship example (4 → 2). Implementation should floor-divide attack/move values by 2. Defense is explicitly unchanged. For a damaged super-battleship (2 dice, ≤4 and ≤2), halving each die produces ≤2 and ≤1.
+2. **"Damaged capital ship attacks/defends/moves at 50% capacity, rounded down."** The source says "50% capacity" and applies to attack, defense, and move. Implementation should floor-divide all three by 2. For a damaged super-battleship (2 dice, ≤4 and ≤2), halving each die produces ≤2 and ≤1. Note the timing carve-out: an undamaged capital ship first-hit during main combat (steps 3–4) fires back at full values that round; the 50% penalty starts next round. A capital ship first-hit in step 2 (Target Select / Surprise Strike) defends at halved values for steps 3–4 of that same round.
 
 3. **Tactical bomber Target Select round-1-only AND forfeits Combined Arms for the entire battle.** This combination means: if you Target Select with a tac bomber in round 1, in rounds 2+ that tac bomber fires at base attack 3 only — it does NOT get the Combined Arms bonus to 4, even if paired with a fighter or tank for the whole battle. Track a "used Target Select this battle" flag per tac bomber.
 
