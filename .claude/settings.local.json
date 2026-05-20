@@ -1,15 +1,28 @@
 {
-    "hooks": {
-        "PreToolUse": [
-            {
-                "matcher": "Read|Grep",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": ".claude/hooks/read_hook.py"
-                    }
-                ]
-            }
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(npx tsx *)",
+      "Bash(curl -s -X POST http://localhost:8000/battles -H 'Content-Type: application/json' -d '{\"terrain\":\"land\",\"attacker\":{\"tech\":[],\"units\":{\"Infantry\":3}},\"defender\":{\"tech\":[],\"units\":{\"Infantry\":3}},\"seed\":42}')",
+      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\(0,'utf8'\\)\\); console.log\\('outcome:',d.outcome,'rounds:',d.rounds,'events:',d.events.length\\)\")",
+      "Bash(curl -s -X POST http://localhost:8000/battles/simulate -H 'Content-Type: application/json' -d '{\"terrain\":\"land\",\"attacker\":{\"tech\":[],\"units\":{\"Infantry\":5,\"Artillery\":2}},\"defender\":{\"tech\":[],\"units\":{\"Infantry\":5}},\"nIterations\":100}')",
+      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\(0,'utf8'\\)\\); console.log\\('attackerWinRate:',d.stats.attackerWinRate,'avgRounds:',d.stats.avgRounds\\)\")",
+      "Bash(kill %1)",
+      "Bash(node -e ' *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/read_hook.py"
+          }
         ]
-    }
+      }
+    ]
+  }
 }
