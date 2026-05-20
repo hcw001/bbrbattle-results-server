@@ -27,3 +27,19 @@ Consider while designing this architecture and API, that it should be very easy 
 Provided a detailed overview of the architectural design of this solution which can be found in /docs/design/architecture.
 
 @docs/design/architecture.md
+
+## Commands
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run locally (port 8000, debug mode)
+python main.py
+
+# Run production server
+gunicorn main:app
+
+# Run all test scenarios
+python -m test.test
+```
