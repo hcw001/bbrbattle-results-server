@@ -272,7 +272,7 @@ class SuperAircraftCarrier(Unit):
 
 class SuperAircraftCarrierX(Unit):
     def __init__(self, side):
-        roll = getRoll(side, (0,1))
+        roll = getRoll(side, (0,2))  # fully operational at 1 hit — D stays 2
         super().__init__(roll=roll, ipc=16)
         self.downgrade = DamagedSuperAircraftCarrier.__name__
     def getTags(self, **kwargs):

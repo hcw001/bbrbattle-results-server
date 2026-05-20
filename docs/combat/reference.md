@@ -53,7 +53,7 @@ Legend: A = Attack, D = Defense, M = Movement, HP = Damage Capacity, Cost = IPCs
 
 **Strategic Bomber attack notation `2@2`**: rolls **2 dice**, each hits on `≤2`.
 
-**Strategic bombers attacking in general combat fight only round 1, then must retreat (or be a casualty).**
+**Strategic bombers attacking in general combat fight only round 1. After round 1, any surviving strategic bomber is compulsorily removed from the battle — regardless of whether the attacker presses on — and lands during Noncombat Move. This removal is not a player choice. The only exception is if the bomber was taken as a casualty during round 1, in which case it is already gone.**
 
 ### 2.3 Naval Units
 
@@ -234,7 +234,19 @@ Different sources can have different hit thresholds depending on which techs are
 
 - When in a battle, cancels enemy submarines': **Target Select, Surprise Strike, Submersible, and air-immunity**. (Super Submarines partially override — see §6.)
 
-### 5.5 Strategic Bomber Air Transport (Reclassification)
+### 5.5 Shore Bombardment
+
+Shore bombardment is available to battleships and cruisers during an **amphibious assault** only.
+
+- **Fires in round 1, step 3** — alongside the attacking land units. Bombardment rolls are made at the same time as all other attacking-unit rolls in step 3.
+- **Battleship** bombards at 4. **Cruiser** bombards at 3.
+- **Super Battleships tech:** bombardment rolls 2 dice (one ≤4, one ≤2) — same mechanic as normal attack/defense.
+- **Damaged capital ships cannot bombard** (0 shots contributed).
+- **Round 1 only.** Bombardment does not repeat in subsequent rounds.
+- **Bombarding ships are immune to casualties for the entire battle** — they cannot take hits and cannot be chosen as casualties. They do not participate in combat beyond contributing their bombardment roll.
+- Casualty assignment from bombardment hits follows normal step 3 rules: defender assigns hits and places casualties behind the casualty strip; those units still fire in step 4 this round.
+
+### 5.6 Strategic Bomber Air Transport (Reclassification)
 At Combat Move or Noncombat Move, a strategic or heavy bomber may be reclassified:
 
 | Reclassified Unit | Move | Attack | Defense | Capacity |
@@ -279,7 +291,7 @@ Below is how each tech mutates combat-relevant behavior:
 
 ### 6.6 Heavy Bombers
 - Strategic bombers on attack: **2 dice at hit-on-≤3** (was 2@2).
-- Bombers may be reclassified as **cargo plane** — see §5.5.
+- Bombers may be reclassified as **cargo plane** — see §5.6.
 
 ### 6.7 Jet Fighters
 - Fighter attack: **4** (up from 3).
@@ -310,7 +322,7 @@ Quick-reference for who can hit whom and casualty allocation:
 | Any → transport | Only if no other eligible target (or attacker is a sub using Target Select) |
 | Tac bomber Target Select → infantry / air / submarine / transport | **No** (forbidden targets) |
 | Tac bomber Target Select with AAA/BB-AAA/CR-AAA having fired | **Target Select negated** |
-| Bombardment (BB/CR) hits | Go behind casualty strip; targets still defend in step 3 of amphibious land combat |
+| Bombardment (BB/CR) hits | Fire in round 1 step 3 alongside attackers; defender assigns hits to casualty strip; casualties still fire in step 4 |
 | Capital ship single hit (undamaged) | NOT a kill; place damage chip; unit stays on board |
 | Capital ship final hit (max HP reached) | Placed behind casualty strip; returns fire in step 4 at step-3-start values; still contributes to combined arms in step 4; if killed in step 2 → removed immediately, no return fire, cannot contribute to combined arms in steps 3–4 (other units may still pair with each other if eligible) |
 
@@ -337,7 +349,7 @@ For each General Combat round (a single contested space):
            - Surprise Strike: no pre-declaration; sub rolls, attacker picks casualty from their own units; casualty immediately removed
        - Att Tac Bombers: optional Target Select (round 1 only); negated by any AAA fire; declare specific target before rolling; excess hits lost, not reassigned
        - Apply step-2 casualties immediately
-  3. Attacking units fire (units that didn't act in step 2)
+  3. Attacking units fire (units that didn't act in step 2; + shore bombardment in round 1 of amphibious assaults)
   4. Defending units fire (including units behind casualty strip)
   5. Remove defender's casualties
   6. Termination check:
@@ -350,7 +362,7 @@ For each General Combat round (a single contested space):
 ## 9. Edge Cases & Implementation Gotchas
 
 - **Combined Arms pairings are re-evaluated at each time of firing** — step 3 (attackers) and step 4 (defenders) independently, and are not locked in from prior rounds or steps. Units behind the casualty strip are present at their time of firing and count for combined arms. For example, if an artillery is supporting an infantry and that infantry is killed, the artillery may support a different eligible infantry next time it fires. What units are paired may change within a round and round-to-round.
-- **Strategic bombers only fight round 1** in general combat — track and force retreat (or casualty) after round 1.
+- **Strategic bombers only fight round 1** in general combat — after round 1, any surviving strategic bomber is compulsorily removed from the battle (lands in Noncombat Move) regardless of whether the attacker presses on. This is not a player choice. Only exception: if taken as a casualty in round 1, it is already gone.
 - **Damaged capital ship attack/defense/move all halved** (floor division). Timing: damage state is re-evaluated at the start of each round and immediately after step 2 if struck by Target Select or Surprise Strike. An undamaged capital ship first-hit during main combat (steps 3–4) still fires at full values that round; any penalty(s) begins next round.
 - **Super Battleship rolls two dice** (one ≤4, one ≤2). Damaged super-BB (2 hits) still rolls two dice at 50% values (one ≤2, one ≤1).
 - **AAA only fires once per battle** — track a "has fired" flag per AAA source.
@@ -365,6 +377,7 @@ For each General Combat round (a single contested space):
 - **Escort fighters retreat after the air battle** and are NOT subject to facility AAA — only the bombers face facility AAA.
 - **Carrier hit by sub Target Select**: gets a damage chip; still alive; cannot launch/recover until repaired.
 - **Damaged battleship cannot bombard, cannot fire built-in AAA.**
+- **Bombarding ships (battleships/cruisers) are immune to casualties for the entire battle** — they contribute their round 1 bombardment roll and cannot be hit or chosen as a casualty at any point. Do not place them on the Battle Board as valid casualty targets.
 - **Cruiser+Battleship pair**: cruiser defends at 4 (battleship's own defense value is unchanged). Pairing is evaluated when defending units fire (step 4) — any battleship present at that moment, including one behind the casualty strip, counts for this buff. A battleship killed in step 2 is removed before step 4 and cannot contribute. A battleship on the casualty strip (killed during step 3) is still present at step 4 and can pair. The cruiser can pair with any battleship present when it fires; if no battleship is present, it defends at base 3.
 
 ---
@@ -416,3 +429,95 @@ Items where the source rulebook is unclear, contradictory, or contains implement
 9. **Target Select is a pre-declared commit, not a post-roll casualty pick.** For attacking submarines and attacking tactical bombers, the attacker names the specific target unit *before* any dice are rolled for that step. Each Target Selecting unit independently chooses its own target — multiple units may all declare the same unit, or each may declare a different valid unit. Consequence: if two units both declare the same target and the first hit destroys it, the second hit is wasted — it cannot be redirected to another unit. Surprise Strike does not work this way — it is a roll-then-casualty-pick mechanic where the attacker chooses which of their own units absorbs the hit.
 
 10. **Air units in an amphibious assault**: must be pre-declared as sea-combat OR land-combat assigned. This assignment occurs before the attacker sees the defender's scramble decision; scrambling happens AFTER the attacker assigns its air. So the sequence is: attacker announces amphibious assault → attacker assigns each attacking air unit to sea or land → defender declares scrambles → resolve.
+
+---
+
+## 12. Casualty Selection Strategy
+
+The objective is to win: have surviving units when the enemy does not. Casualty selection is the primary lever for maintaining combat power across rounds. Every hit absorbed is a decision — remove the unit whose loss costs the least expected damage output per remaining round while keeping your highest-value units alive to continue killing enemy units.
+
+Two things determine the outcome: **keeping value alive** (preserve units that generate the most damage per round and anchor combined arms) and **vanquishing the enemy** (your surviving force must collectively deal enough hits to destroy the opposition before it destroys you). Casualty selection that feels conservative — hoarding cheap units and sacrificing expensive ones — is often wrong. Sacrifice whichever unit contributes the least to winning from this point forward.
+
+### 12.1 Effective Combat Value
+
+A unit's effective combat value is its **base dice contribution + combined arms it anchors or receives + enabler value** (e.g. a destroyer suppressing enemy submarines). This is the number to minimize when choosing a casualty.
+
+When assigning a hit, ask: "If I remove this unit, how many fewer expected hits do I generate per round for the rest of the battle?" Sacrifice whichever unit minimizes that loss. This is not always the cheapest or lowest-stat unit — combined arms dependencies mean that removing one unit can silently degrade several others.
+
+### 12.2 Combined Arms Preservation
+
+When a pairing is active, each unit in the pair has a higher effective value than its base stats suggest. The full cost of losing a unit is: **its own base contribution + the combined arms bonus it anchors for others.**
+
+**Land pairings (attack only):**
+
+| Scenario | Lose the support unit (artillery) | Lose the supported unit (infantry/mech) |
+|---|---|---|
+| 1 arty + 1 inf | Arty (A=2) lost; infantry drops A=2→1. Total loss: 3 attack. | Infantry (A=2) lost; arty still at A=2. Total loss: 2 attack. Prefer this. |
+| 1 arty + 3 inf (base only) | Arty supports 1 inf; losing arty costs A=2 (arty) + 1 bonus (inf drops). Total loss: 3 attack. | Losing the supported inf costs A=2; arty may now support a different inf. Net loss: 2 attack. Prefer this. |
+
+**Key rule:** absorb hits with supported infantry before absorbing the supporting artillery, unless all remaining infantry are already supported by other artillery units. After the hit, re-evaluate which infantry the surviving artillery supports — pairings re-evaluate each firing step.
+
+**Tactical bomber pairings (attack only):**
+
+A tac bomber paired with a tank or fighter attacks at A=4 instead of A=3. Losing the pairing partner (tank or fighter) costs 1 expected attack per round for every remaining round. If the tac bomber already used Target Select, it has no combined arms for the rest of the battle — treat the tank/fighter at base value only when evaluating which to lose.
+
+**Naval pairings (defense only):**
+
+- **Battleship + Cruiser (cruiser D=4):** losing the battleship drops the cruiser from D=4 to D=3 for every remaining defense round. Compare: losing a cruiser costs 3–4 defense; losing the battleship costs 4 defense and also strips the cruiser buff. Prefer to absorb hits with the cruiser unless the battleship has clearly lower remaining value.
+- **Transport pair (one defends at 1):** two transports are always last-chosen anyway. If only two remain and a hit must go to one, it does not matter which — both are chosen last and the pairing dissolves the following round either way.
+
+### 12.3 Destroyer as an Enabler
+
+A destroyer's base combat value (A=2, D=2) understates its strategic impact. While it is alive, all enemy submarine abilities — Target Select, Surprise Strike, Submerge, and air-immunity — are suppressed, and friendly air units can hit enemy submarines. Losing a destroyer potentially restores full sub capability to the opponent, compounding damage across every remaining round.
+
+Absorb hits with other units before the destroyer unless no alternative exists. With Super Submarines, one destroyer covers only 3 subs — account for how many enemy subs remain undetected when evaluating whether the destroyer's enabler value is still active.
+
+### 12.4 Capital Ships as Hit Sponges
+
+Capital ships (HP > 1) do not always die when hit. Whether routing a hit through one is the right call depends entirely on the **absorption cost** — what combat effectiveness, if any, is lost.
+
+**Undamaged super capital ships (0 hits) and super capital ships at 1 hit (still fully operational):** absorption cost = zero. The unit fights at full strength next round. These are the ideal hit sponges — route hits here freely. You absorb a hit while giving up nothing in combat output.
+
+**Undamaged regular capital ships (0 hits):** absorption cost = stat degradation from the next round onward (A/D/M halved; BB additionally loses AAA and shore bombard). Only absorb here if the alternative casualty costs more expected damage output across remaining rounds.
+
+**Damaged capital ships (at their final hit):** the unit is destroyed. Compare its remaining expected contribution (half-stat output × estimated rounds left) against the alternative casualty, and remove whichever costs less.
+
+| Capital ship state | Absorption cost | Recommendation |
+|---|---|---|
+| Super BB/Carrier, 0 hits | None — fully operational after | Route hits here freely; prefer over destroying any other unit |
+| Super BB, 1 hit (SuperBattleshipX) | None — still fully operational | Route hits here freely |
+| Super Carrier, 1 hit (SuperAircraftCarrierX) | None — still fully operational | Route hits here freely |
+| Regular BB/Carrier, 0 hits | Halved A/D/M next round; BB also loses AAA + bombard | Absorb only if cheaper than the alternative |
+| Super BB, 2 hits / Regular BB, 1 hit (damaged) | Final hit — unit destroyed | Compare remaining output vs. alternative |
+| Super Carrier, 2 hits / Regular Carrier, 1 hit (damaged) | Final hit — unit destroyed | Compare remaining output vs. alternative |
+
+**Combat role matters when comparing free sponges.** Both an undamaged super carrier (A=0 attacking) and an undamaged super battleship (A=4, rolls 2 dice) absorb a hit for free, but the carrier sacrifices nothing on attack. Route hits through the carrier first; both survive fully operational and you preserve maximum attack output. On defense both contribute similarly (D=2), so either is equally valid.
+
+### 12.5 Default Static Order of Loss
+
+The default heuristic is a static ordered list of unit types — sacrifice first to last. It is a practical approximation of the principles above, used when no custom order is provided. The list is defined in `config.py:defaultOrderOfLoss` per (role × terrain).
+
+**Land — Attacker:** `Strat → Inf → Mech → Cav → Art → Tank → Ftr → Tac`
+- Strategic bombers go first — they fire only in round 1 and carry no value afterward.
+- Infantry before mech and cavalry; artillery is protected because its combined-arms value lifts every paired infantry.
+- Tanks and fighters last — highest sustained attack contribution.
+
+**Land — Defender:** `AAA → Cav → Strat → Inf → Mech → Art → Tank → Tac → Ftr`
+- AAA first — D=1, no offensive value.
+- Cavalry before infantry — D=1 vs D=2; infantry's higher defensive value plus artillery pairing makes it worth protecting longer.
+- Fighters last — D=4, highest defensive contribution.
+
+**Sea — Attacker:** `Strat → sACC → sACCx → ACC → ACCx → sACCxx → Sub → Dtr → sBTSxx → BTSx → sBTS → sBTSx → BTS → Ftr → CSR → Tac`
+- Carriers come before battleships: carriers have A=0 on attack and absorb hits for free while losing zero attack output. Undamaged super carriers (sACC, sACCx) are ideal first sacrifices.
+- Damaged carriers and damaged battleships come before their undamaged counterparts — they contribute less and their final hit costs nothing further.
+- Destroyers are in the mid-range — moderate attack value, important enabler value.
+- Undamaged super battleships (sBTS, sBTSx) come late: they absorb for free but contribute A=4 (or 2 dice); route hits here only after exhausting cheaper options.
+- Fighters, cruisers, and tactical bombers are protected last — highest sustained attack output.
+
+**Sea — Defender:** `Sub → sACC → sACCx → ACC → ACCx → sACCxx → Dtr → sBTSxx → BTSx → sBTS → sBTSx → Tac → BTS → CSR → Ftr`
+- Submarines first — D=1, lowest defensive contribution.
+- Carriers (super then regular) next: D=2 but free absorption for undamaged super variants; loss costs minimal defense.
+- Destroyers after carriers — enabler value warrants protection over low-D-value units.
+- Fighters, battleships, and cruisers are protected last — D=4 each, highest defensive contribution.
+
+Transports (`TPT`) are always appended last by `battle.py` regardless of the order returned here, per §5.3.

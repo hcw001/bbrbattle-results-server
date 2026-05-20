@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from simulation import Simulation
 from store import logError, logOutputs, logUserRequest
+from config import defaultOrderOfLoss
+from lib import Role
 #from AccessHistory import fetchState, insertState
 
 app = Flask(__name__)
@@ -35,8 +37,8 @@ def getResults():
         terrain = data.get('terrain')
         attackerTech = data.get('attackerTech')
         defenderTech = data.get('defenderTech')
-        attackerOrderOfLoss = data.get('attackerOrderOfLoss')
-        defenderOrderOfLoss = data.get('defenderOrderOfLoss')
+        attackerOrderOfLoss = data.get('attackerOrderOfLoss') or defaultOrderOfLoss(Role.ATTACK, terrain)
+        defenderOrderOfLoss = data.get('defenderOrderOfLoss') or defaultOrderOfLoss(Role.DEFENSE, terrain)
         attackerUnits = data.get('attackerUnits')
         defenderUnits = data.get('defenderUnits')
         targetSelectAssigments = data.get('targetSelectAssignments')

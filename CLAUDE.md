@@ -16,14 +16,14 @@ For instance for a given battle I should be able to understand:
 
 ## Mechanics
 
-Detailed mechanics of combat in the game and how the battle engine needs to operate can be round in /docs/combat/reference.md.
+Detailed mechanics of combat in the game and how the battle engine needs to operate can be found in /docs/combat/reference.md.
 
 @docs/combat/reference.md
 
 ## Architecture
 
-Consider while designing this architecture and API, that it should be very easy to build on top of - for instance if implementing sequential battles - where the survivors of one battle fight another force, or plugging in an RL-powered strategy for casualty select for a player.
+Consider while designing this architecture and API, that it should be very easy to build on top of - for instance if implementing sequential battles - where the survivors of one battle fight another force, or plugging in different heuristics for casualty selecttion for a player.
 
-Provided a detailed overview of the architectural design of this solution.
+Provided a detailed overview of the architectural design of this solution which can be found in /docs/design/architecture.
 
 @docs/design/architecture.md
