@@ -43,3 +43,9 @@ gunicorn main:app
 # Run all test scenarios
 python -m test.test
 ```
+
+## Testing
+
+Tests are crucial for ensuring the consistency and reliability of this application. You should create robust tests around both the implementation and selected functionality of thus battle simulator.
+
+@docs/design/testing.md
