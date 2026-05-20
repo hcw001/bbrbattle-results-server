@@ -32,20 +32,37 @@ Provided a detailed overview of the architectural design of this solution which 
 
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+npm install
 
-# Run locally (port 8000, debug mode)
-python main.py
+# Run locally (port 8000)
+npx tsx src/index.ts
 
-# Run production server
-gunicorn main:app
+# Type check (zero errors required)
+npx tsc --noEmit
 
-# Run all test scenarios
-python -m test.test
+# Run all tests
+npx vitest run
+
+# Run tests in watch mode
+npx vitest
+
+# Run with coverage
+npx vitest run --coverage
 ```
+
+## API endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| POST | /battles | Single deterministic battle with full event log |
+| POST | /battles/simulate | Monte Carlo simulation (default 20,000 iterations) |
+| POST | /api/calculate | Legacy compatibility endpoint used by bbr40.com frontend |
+| GET | /health | Health check |
 
 ## Testing
 
-Tests are crucial for ensuring the consistency and reliability of this application. You should create robust tests around both the implementation and selected functionality of thus battle simulator.
+Tests are crucial for ensuring the consistency and reliability of this application. You should create robust tests around both the implementation and selected functionality of this battle simulator.
+
+Assert on the **event log**, not just final state. The event log answers "what happened, to whom, why" — it is the ground truth for behavioral correctness.
 
 @docs/design/testing.md

@@ -1,1 +1,1 @@
-web: gunicorn main:app
+web: node --import tsx/esm src/index.ts
