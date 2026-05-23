@@ -15,7 +15,6 @@ Current state:
 - Python codebase: main.py (Flask), battle.py, player.py, units.py, config.py, simulation.py
 - No `src/` directory exists
 - No package.json, tsconfig.json, or any TypeScript toolchain configured
-- `scratch/` directory exists but is empty
 
 The target is a complete TypeScript rewrite using Fastify v5 + Zod + Vitest, producing
 an identical API surface to what the frontend at bbr40.com already expects, but with
