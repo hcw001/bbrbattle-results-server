@@ -274,6 +274,24 @@ Handled in `src/strategies/targetSelect.ts` and enforced in `src/api/schemas.ts`
 
 ---
 
+## Tasks
+
+> Format: `- [ ] **Title** — what to do and why. Found: <file:line or doc §section + what triggered it>. Requires: *Title*. (omit if none)`
+> To add a task: `/create-task`. To pick and complete the next task: `/next-task`.
+
+- [x] Phase 0 — Project scaffold (`package.json`, `tsconfig.json`, `vitest.config.ts`, deps)
+- [x] Phase 1 — Core types (`engine/state.ts`, `engine/events.ts`, `engine/dice.ts`)
+- [x] Phase 2 — Profiles (`profiles/units.ts`, `profiles/tech.ts`, `profiles/combinedArms.ts`, `profiles/casualtyOrder.ts`)
+- [x] Phase 3 — Rules (all 7 `rules/*.ts` modules)
+- [x] Phase 4 — Strategies (`strategies/types.ts` + default implementations)
+- [x] Phase 5 — Steps (`steps/step1Place.ts` … `steps/step7Conclude.ts`)
+- [x] Phase 6 — Engine (`engine/engine.ts`: `runBattle`, `runCampaign`)
+- [x] Phase 7 — API (`api/schemas.ts`, `api/routes.ts`, `api/simulation.ts`, `index.ts`)
+- [x] Phase 8 — Tests (unit rule tests, step scenario tests, golden seeded scenarios)
+- [x] Phase 9 — Migration (remove Python files, update `CLAUDE.md`)
+
+---
+
 ## Verification
 
 ```bash
