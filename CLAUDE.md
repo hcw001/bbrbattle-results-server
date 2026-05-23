@@ -69,14 +69,6 @@ Assert on the **event log**, not just final state. The event log answers "what h
 
 ## Workflow
 
-Tasks are tracked in the `## Tasks` section of `PLAN.md` as checkboxes. Two distinct session modes:
+Tasks and changelog are at the **monorepo root** — `PLAN.md` and `CHANGELOG.md`. Do not create package-level copies.
 
-- **Exploratory session** — investigate, read code, cross-reference docs. When you find a gap, run `/create-task` to append it to the backlog with enough origin context for a future session to pick it up cold.
-- **Execution session** — run `/next-task` to pick the best unblocked task, load its context from the `Found:` field, complete the work, and close out.
-
-When a task is complete, run `/update-changelog`, which will:
-
-1. Mark the task `[x]` in `PLAN.md`.
-2. Append a dated entry to `CHANGELOG.md`.
-
-Run `/update-changelog` after any non-trivial work — whether it originated from a `PLAN.md` task or not. Skip it for exploratory work, pure read-only investigation, or single-line fixes.
+Task lifecycle: `/create-task` → `/next-task` → `/update-changelog`.
