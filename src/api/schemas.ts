@@ -62,13 +62,17 @@ export const SimulateRequestSchema = z.object({
 export type BattleRequest = z.infer<typeof BattleRequestSchema>;
 export type SimulateRequest = z.infer<typeof SimulateRequestSchema>;
 
-export type UnitCountMap = Partial<Record<z.infer<typeof UnitTypeSchema>, number>>;
+export type SurvivingUnit = {
+  type: z.infer<typeof UnitTypeSchema>;
+  count: number;
+  hpTaken: number;
+};
 
 export type BattleResponse = {
   outcome: 'attacker' | 'defender' | 'draw';
   rounds: number;
-  survivingAttacker: UnitCountMap;
-  survivingDefender: UnitCountMap;
+  survivingAttacker: SurvivingUnit[];
+  survivingDefender: SurvivingUnit[];
   ipcLost: { attacker: number; defender: number };
   events: unknown[];
 };
@@ -82,7 +86,7 @@ export type SimulateResponse = {
     avgIpcLost: { attacker: number; defender: number };
   };
   outcomeDistribution: {
-    attacker: Array<{ units: UnitCountMap; probability: number; ipcLost: number }>;
-    defender: Array<{ units: UnitCountMap; probability: number; ipcLost: number }>;
+    attacker: Array<{ units: SurvivingUnit[]; probability: number; ipcLost: number }>;
+    defender: Array<{ units: SurvivingUnit[]; probability: number; ipcLost: number }>;
   };
 };

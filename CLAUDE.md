@@ -31,23 +31,23 @@ Provided a detailed overview of the architectural design of this solution which 
 ## Commands
 
 ```bash
-# Install dependencies
-npm install
+# Install dependencies (run from monorepo root)
+pnpm install
 
 # Run locally (port 8000)
-npx tsx src/index.ts
+pnpm dev
 
 # Type check (zero errors required)
-npx tsc --noEmit
+pnpm typecheck
 
 # Run all tests
-npx vitest run
+pnpm test
 
 # Run tests in watch mode
-npx vitest
+pnpm test:watch
 
 # Run with coverage
-npx vitest run --coverage
+pnpm test:coverage
 ```
 
 ## API endpoints

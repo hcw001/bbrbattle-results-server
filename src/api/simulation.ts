@@ -1,18 +1,22 @@
-import type { BattleState, Unit, UnitType } from '../engine/state.js';
-import type { BattleResult } from '../engine/engine.js';
+import type { Unit, UnitType } from '../engine/state.js';
 import { runBattle, buildBattleState } from '../engine/engine.js';
 import { Dice } from '../engine/dice.js';
-import { resolveProfile } from '../rules/profile.js';
 import { UNIT_PROFILES } from '../profiles/units.js';
-import type { BattleRequest, SimulateResponse, UnitCountMap } from './schemas.js';
+import type { BattleRequest, SimulateResponse, SurvivingUnit } from './schemas.js';
 
-/** Converts a unit array to a {type: count} map. */
-export function toUnitCountMap(units: readonly Unit[], tech: ReadonlySet<import('../engine/state.js').TechId>): UnitCountMap {
-  const map: Record<string, number> = {};
+/** Groups survivors by type+hpTaken, preserving damage state. */
+export function toSurvivors(units: readonly Unit[]): SurvivingUnit[] {
+  const map = new Map<string, { type: UnitType; count: number; hpTaken: number }>();
   for (const unit of units) {
-    map[unit.type] = (map[unit.type] ?? 0) + 1;
+    const key = `${unit.type}:${unit.hpTaken}`;
+    const existing = map.get(key);
+    if (existing) {
+      existing.count++;
+    } else {
+      map.set(key, { type: unit.type, count: 1, hpTaken: unit.hpTaken });
+    }
   }
-  return map as UnitCountMap;
+  return [...map.values()].sort((a, b) => a.type.localeCompare(b.type) || a.hpTaken - b.hpTaken);
 }
 
 /** Computes IPC lost for a side given initial unit counts and survivors. */
@@ -67,8 +71,8 @@ export function runSingleBattle(req: BattleRequest) {
   return {
     outcome: result.outcome,
     rounds: result.rounds,
-    survivingAttacker: toUnitCountMap(result.survivingAttacker, state.attacker.tech),
-    survivingDefender: toUnitCountMap(result.survivingDefender, state.defender.tech),
+    survivingAttacker: toSurvivors(result.survivingAttacker),
+    survivingDefender: toSurvivors(result.survivingDefender),
     ipcLost: {
       attacker: computeIpcLost(req.attacker.units as Partial<Record<UnitType, number>>, result.survivingAttacker),
       defender: computeIpcLost(req.defender.units as Partial<Record<UnitType, number>>, result.survivingDefender),
@@ -92,8 +96,8 @@ export function runSimulation(req: import('./schemas.js').SimulateRequest): Simu
   let totalDefenderIpc = 0;
 
   // Track outcome distributions
-  const attackerOutcomes = new Map<string, { count: number; ipcLost: number; units: UnitCountMap }>();
-  const defenderOutcomes = new Map<string, { count: number; ipcLost: number; units: UnitCountMap }>();
+  const attackerOutcomes = new Map<string, { count: number; ipcLost: number; units: SurvivingUnit[] }>();
+  const defenderOutcomes = new Map<string, { count: number; ipcLost: number; units: SurvivingUnit[] }>();
 
   const initialAttacker = req.attacker.units as Partial<Record<UnitType, number>>;
   const initialDefender = req.defender.units as Partial<Record<UnitType, number>>;
@@ -126,20 +130,18 @@ export function runSimulation(req: import('./schemas.js').SimulateRequest): Simu
     totalAttackerIpc += attIpc;
     totalDefenderIpc += defIpc;
 
-    // Record outcome distributions
-    const attKey = JSON.stringify(toUnitCountMap(result.survivingAttacker, state.attacker.tech));
-    const defKey = JSON.stringify(toUnitCountMap(result.survivingDefender, state.defender.tech));
+    // Record outcome distributions — key includes hpTaken so damaged and healthy units are distinct
+    const attSurvivors = toSurvivors(result.survivingAttacker);
+    const defSurvivors = toSurvivors(result.survivingDefender);
+    const attKey = JSON.stringify(attSurvivors);
+    const defKey = JSON.stringify(defSurvivors);
 
     const existing = attackerOutcomes.get(attKey);
     if (existing) {
       existing.count++;
       existing.ipcLost += attIpc;
     } else {
-      attackerOutcomes.set(attKey, {
-        count: 1,
-        ipcLost: attIpc,
-        units: toUnitCountMap(result.survivingAttacker, state.attacker.tech),
-      });
+      attackerOutcomes.set(attKey, { count: 1, ipcLost: attIpc, units: attSurvivors });
     }
 
     const existingDef = defenderOutcomes.get(defKey);
@@ -147,11 +149,7 @@ export function runSimulation(req: import('./schemas.js').SimulateRequest): Simu
       existingDef.count++;
       existingDef.ipcLost += defIpc;
     } else {
-      defenderOutcomes.set(defKey, {
-        count: 1,
-        ipcLost: defIpc,
-        units: toUnitCountMap(result.survivingDefender, state.defender.tech),
-      });
+      defenderOutcomes.set(defKey, { count: 1, ipcLost: defIpc, units: defSurvivors });
     }
   }
 
